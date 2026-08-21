@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useRef } from "react";
+import { type ReactNode, useEffect, useEffectEvent, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 interface ModalProps {
@@ -12,13 +12,14 @@ interface ModalProps {
 export function Modal({ open, title, children, onClose, dismissible = true }: ModalProps) {
   const { t } = useTranslation();
   const dialogRef = useRef<HTMLDivElement>(null);
+  const close = useEffectEvent(() => onClose?.());
 
   useEffect(() => {
     if (!open) return;
     const previous = document.activeElement as HTMLElement | null;
     dialogRef.current?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && dismissible) onClose?.();
+      if (event.key === "Escape" && dismissible) close();
       if (event.key !== "Tab" || !dialogRef.current) return;
       const focusable = Array.from(
         dialogRef.current.querySelectorAll<HTMLElement>(
@@ -46,7 +47,7 @@ export function Modal({ open, title, children, onClose, dismissible = true }: Mo
       window.removeEventListener("keydown", onKeyDown);
       previous?.focus();
     };
-  }, [dismissible, onClose, open]);
+  }, [dismissible, open]);
 
   if (!open) return null;
   return (

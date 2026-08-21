@@ -55,5 +55,5 @@ export function getRelationshipPortrait(relationship: Relationship): PortraitDes
 }
 
 export function getPortraitAsset({ gender, ageBand }: PortraitDescriptor): string {
-  return `/assets/art/protagonist-${gender}-${ageBand}.png`;
+  return `${import.meta.env.BASE_URL}assets/art/protagonist-${gender}-${ageBand}.png`;
 }

@@ -21,14 +21,16 @@ const BACKGROUND_BY_STEP: Record<VisualCommand["step"], string> = {
   [STORY_STEP.ENDING]: "camp",
 };
 
+const ART_ASSET_BASE = `${import.meta.env.BASE_URL}assets/art/`;
+
 const BACKGROUND_ASSETS = {
-  "menu-city": "/assets/art/menu-city.webp",
-  apartment: "/assets/art/apartment.webp",
-  television: "/assets/art/television.webp",
-  village: "/assets/art/village.webp",
-  journey: "/assets/art/journey.webp",
-  forest: "/assets/art/forest.webp",
-  camp: "/assets/art/camp.webp",
+  "menu-city": `${ART_ASSET_BASE}menu-city.webp`,
+  apartment: `${ART_ASSET_BASE}apartment.webp`,
+  television: `${ART_ASSET_BASE}television.webp`,
+  village: `${ART_ASSET_BASE}village.webp`,
+  journey: `${ART_ASSET_BASE}journey.webp`,
+  forest: `${ART_ASSET_BASE}forest.webp`,
+  camp: `${ART_ASSET_BASE}camp.webp`,
 } as const;
 
 export class NarrativeScene extends Phaser.Scene {
@@ -46,13 +48,13 @@ export class NarrativeScene extends Phaser.Scene {
 
   preload(): void {
     for (const [key, url] of Object.entries(BACKGROUND_ASSETS)) this.load.image(key, url);
-    this.load.image("neighbor", "/assets/art/neighbor.png");
-    this.load.image("armed-group", "/assets/art/armed-group.png");
+    this.load.image("neighbor", `${ART_ASSET_BASE}neighbor.png`);
+    this.load.image("armed-group", `${ART_ASSET_BASE}armed-group.png`);
     for (const gender of ["man", "woman"] as const) {
       for (const age of ["childhood", "adolescence", "youth", "adulthood", "oldAge"] as const) {
         this.load.image(
           `protagonist-${gender}-${age}`,
-          `/assets/art/protagonist-${gender}-${age}.png`,
+          `${ART_ASSET_BASE}protagonist-${gender}-${age}.png`,
         );
       }
     }
