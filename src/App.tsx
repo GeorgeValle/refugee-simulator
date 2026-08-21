@@ -34,10 +34,27 @@ interface ConfirmAction {
 }
 
 const EMPTY_FAMILY: FamilyMember[] = [];
+const WARNING_ACCEPTED_KEY = "refugee-simulator:warning-accepted";
 const PhaserStage = lazy(async () => {
   const module = await import("@/game/PhaserStage");
   return { default: module.PhaserStage };
 });
+
+function loadWarningAccepted(): boolean {
+  try {
+    return window.sessionStorage.getItem(WARNING_ACCEPTED_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function rememberWarningAccepted(): void {
+  try {
+    window.sessionStorage.setItem(WARNING_ACCEPTED_KEY, "true");
+  } catch {
+    // The in-memory React state still allows the user to continue.
+  }
+}
 
 function storyScene(step: StoryStep): StoryStep {
   return step;
@@ -45,9 +62,7 @@ function storyScene(step: StoryStep): StoryStep {
 
 export default function App() {
   const { t } = useTranslation();
-  const [warningAccepted, setWarningAccepted] = useState(
-    () => sessionStorage.getItem("refugee-simulator:warning-accepted") === "true",
-  );
+  const [warningAccepted, setWarningAccepted] = useState(loadWarningAccepted);
   const [slots, setSlots] = useState<SaveSlot[]>(() => saveRepository.list());
   const [session, setSession] = useState<GameSession | null>(null);
   const [preferences, setPreferences] = useState<AudioPreferences>(() =>
@@ -349,7 +364,7 @@ export default function App() {
             className="button button--primary"
             type="button"
             onClick={() => {
-              sessionStorage.setItem("refugee-simulator:warning-accepted", "true");
+              rememberWarningAccepted();
               setWarningAccepted(true);
             }}
           >
