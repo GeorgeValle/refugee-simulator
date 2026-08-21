@@ -22,11 +22,13 @@ class GameBridge {
   private latestVisual: VisualCommand | null = null;
   private latestPreferences: AudioPreferences | null = null;
   private latestPause = false;
+  private audioUnlocked = false;
 
   emit<K extends BridgeEventName>(name: K, payload: BridgeEvents[K]): void {
     if (name === "visual") this.latestVisual = payload as VisualCommand;
     if (name === "preferences") this.latestPreferences = payload as AudioPreferences;
     if (name === "pause") this.latestPause = payload as boolean;
+    if (name === "unlockAudio") this.audioUnlocked = true;
     for (const listener of this.listeners.get(name) ?? []) {
       (listener as Listener<BridgeEvents[K]>)(payload);
     }
@@ -44,6 +46,9 @@ class GameBridge {
     }
     if (name === "pause") {
       listener(this.latestPause as BridgeEvents[K]);
+    }
+    if (name === "unlockAudio" && this.audioUnlocked) {
+      listener(undefined as BridgeEvents[K]);
     }
     return () => listeners.delete(listener as Listener<never>);
   }
