@@ -1,9 +1,10 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { createSession, STORY_STEP } from "@/game/model";
-import { saveRepository } from "@/game/storage";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createSession, DEFAULT_AUDIO_PREFERENCES, STORY_STEP } from "@/game/model";
+import { preferencesRepository, saveRepository } from "@/game/storage";
 
 describe("save repository", () => {
   beforeEach(() => localStorage.clear());
+  afterEach(() => vi.restoreAllMocks());
 
   it("keeps three independent local slots", () => {
     const first = { ...createSession(1, 100), step: STORY_STEP.APARTMENT, updatedAt: 200 };
@@ -48,5 +49,16 @@ describe("save repository", () => {
       saveRepository.save(session);
       expect(saveRepository.load(1)?.step).toBe(step);
     }
+  });
+
+  it("keeps repository writes safe when local storage fails", () => {
+    const write = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new DOMException("Quota exceeded", "QuotaExceededError");
+    });
+
+    expect(() => saveRepository.save(createSession(1, 100))).not.toThrow();
+    expect(() => saveRepository.delete(1)).not.toThrow();
+    expect(() => preferencesRepository.save(DEFAULT_AUDIO_PREFERENCES)).not.toThrow();
+    expect(write).toHaveBeenCalledTimes(3);
   });
 });
