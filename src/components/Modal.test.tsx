@@ -1,0 +1,34 @@
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { describe, expect, it } from "vitest";
+import { Modal } from "@/components/Modal";
+import { OrientationGuard } from "@/components/OrientationGuard";
+import "@/i18n";
+
+describe("blocking overlay focus", () => {
+  it("cycles focus inside a modal", async () => {
+    const user = userEvent.setup();
+    render(
+      <Modal open title="Prueba">
+        <button type="button">Primero</button>
+        <button type="button">Último</button>
+      </Modal>,
+    );
+
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Cerrar" })).toHaveFocus();
+    await user.tab({ shift: true });
+    expect(screen.getByRole("button", { name: "Último" })).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Cerrar" })).toHaveFocus();
+  });
+
+  it("keeps focus on the portrait orientation guard", async () => {
+    const user = userEvent.setup();
+    render(<OrientationGuard />);
+    const guard = screen.getByRole("alertdialog");
+    expect(guard).toHaveFocus();
+    await user.tab();
+    expect(guard).toHaveFocus();
+  });
+});
