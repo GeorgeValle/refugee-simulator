@@ -24,6 +24,7 @@ export function SettingsPanel({ open, preferences, onChange, onClose }: Settings
             <output>{Math.round(preferences[key] * 100)}%</output>
             <input
               type="range"
+              aria-label={t(`settings.${key}`)}
               min="0"
               max="1"
               step="0.05"

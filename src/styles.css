@@ -53,6 +53,10 @@ a:focus-visible {
   outline: 3px solid var(--gold-light);
   outline-offset: 3px;
 }
+[data-story-focus]:focus-visible {
+  outline: 3px solid var(--gold-light);
+  outline-offset: 5px;
+}
 
 .app {
   position: relative;
@@ -1271,4 +1275,13 @@ a:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+.app[data-reduced-motion="true"] *,
+.app[data-reduced-motion="true"] *::before,
+.app[data-reduced-motion="true"] *::after {
+  scroll-behavior: auto !important;
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
 }

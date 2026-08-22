@@ -222,6 +222,10 @@ manual, vencimiento total y parcial, aleatoriedad inyectada, ausencia de rerolls
 rotar, recorrido completo en escritorio y teléfono horizontal, teclado, reducción de movimiento y
 axe-core.
 
+La navegación de la SPA mueve el foco al título o diálogo de cada capítulo. La comprobación manual
+completa con NVDA o VoiceOver sigue documentada como validación previa a una publicación pública;
+las pruebas automatizadas no sustituyen esa revisión con un lector de pantalla real.
+
 ## Arte, audio y referencias
 
 El arte distribuido en `public/assets/art/` fue generado específicamente para este proyecto y luego

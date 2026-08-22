@@ -59,7 +59,9 @@ export function LossScreen({
             <span className="eyebrow">
               {timed ? t("story.timedLoss.body") : t("story.firstLoss.body")}
             </span>
-            <h1>{t("loss.title")}</h1>
+            <h1 data-story-focus="true" tabIndex={-1}>
+              {t("loss.title")}
+            </h1>
           </div>
           {timed ? (
             <div className={`timer${seconds <= 3 ? " timer--urgent" : ""}`} aria-live="assertive">

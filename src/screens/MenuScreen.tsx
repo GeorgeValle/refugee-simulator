@@ -14,7 +14,9 @@ export function MenuScreen({ slots, onNew, onContinue, onDelete }: MenuScreenPro
     <main className="menu-screen">
       <div className="menu-screen__title">
         <span className="eyebrow">{t("app.subtitle")}</span>
-        <h1>{t("app.title")}</h1>
+        <h1 data-story-focus="true" tabIndex={-1}>
+          {t("app.title")}
+        </h1>
         <div className="title-divider" />
       </div>
       <section className="save-slots" aria-labelledby="save-title">

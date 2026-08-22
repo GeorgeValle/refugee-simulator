@@ -65,7 +65,9 @@ export function FamilyScreen({ ageBand, initialFamily, onSubmit }: FamilyScreenP
     <main className="panel-screen">
       <section className="form-card form-card--wide">
         <span className="eyebrow">{t("story.familyIntro")}</span>
-        <h1>{t("family.title")}</h1>
+        <h1 data-story-focus="true" tabIndex={-1}>
+          {t("family.title")}
+        </h1>
         <p className="form-card__lead">{t("family.instructions")}</p>
         <div className="family-grid">
           {rows.map((row, index) => {

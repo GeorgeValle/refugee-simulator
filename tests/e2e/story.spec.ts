@@ -96,6 +96,7 @@ test("completa la historia y conserva las decisiones", async ({ page }) => {
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByRole("button", { name: "Correr por tu vida" }).click();
+  await expect(page.getByText("Llanto tenue y sonidos distantes del campamento")).toBeVisible();
   await page.getByRole("button", { name: "Continuar" }).click();
 
   await expect(page.getByRole("heading", { name: "Lo que quedó atrás" }).first()).toBeVisible();

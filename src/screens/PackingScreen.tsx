@@ -31,7 +31,9 @@ export function PackingScreen({ onSubmit }: PackingScreenProps) {
     <main className="panel-screen">
       <form className="form-card form-card--wide" onSubmit={handleSubmit(onSubmit)}>
         <span className="eyebrow">{t("story.packing.body")}</span>
-        <h1>{t("slips.title")}</h1>
+        <h1 data-story-focus="true" tabIndex={-1}>
+          {t("slips.title")}
+        </h1>
         <p className="form-card__lead">{t("slips.instructions")}</p>
         <div className="packing-layout">
           <fieldset className="packing-section">

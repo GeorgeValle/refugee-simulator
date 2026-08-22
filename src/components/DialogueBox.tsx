@@ -35,7 +35,12 @@ export function DialogueBox({
   }, [body.length, complete, reducedMotion]);
 
   return (
-    <section className="dialogue" aria-label={t("accessibility.dialogue")}>
+    <section
+      className="dialogue"
+      aria-label={t("accessibility.dialogue")}
+      data-story-focus="true"
+      tabIndex={-1}
+    >
       <span className="dialogue__speaker">{speaker}</span>
       <p className="dialogue__text" aria-hidden="true">
         {body.slice(0, visibleCharacters)}

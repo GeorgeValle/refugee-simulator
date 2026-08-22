@@ -87,6 +87,8 @@ export default function App() {
   const systemReducedMotion = useSystemReducedMotion();
   const reducedMotion = preferences.reducedMotion || systemReducedMotion;
   const audioUnlockedRef = useRef(false);
+  const storyLayerRef = useRef<HTMLDivElement>(null);
+  const lastFocusedStepRef = useRef<StoryStep | "menu" | null>(null);
   const visualStep = session?.step ?? "menu";
   const visualProfile = session?.profile ?? null;
   const visualFamily = session?.family ?? EMPTY_FAMILY;
@@ -128,6 +130,15 @@ export default function App() {
       reducedMotion,
     });
   }, [reducedMotion, visualFamily, visualProfile, visualStep]);
+
+  useEffect(() => {
+    if (!warningAccepted || settingsOpen || confirmAction || portraitPhone) return;
+    if (lastFocusedStepRef.current === visualStep) return;
+    const target = storyLayerRef.current?.querySelector<HTMLElement>("[data-story-focus]");
+    if (!target) return;
+    target.focus({ preventScroll: true });
+    lastFocusedStepRef.current = visualStep;
+  }, [confirmAction, portraitPhone, settingsOpen, visualStep, warningAccepted]);
 
   useEffect(() => {
     gameBridge.emit("pause", gameplayPaused);
@@ -332,6 +343,7 @@ export default function App() {
             body={t("story.camp.body")}
             actionLabel={t("common.continue")}
             reducedMotion={reducedMotion}
+            caption={preferences.captions ? t("accessibility.softCrying") : undefined}
             onAction={() => goTo(STORY_STEP.ENDING)}
           />
         );
@@ -347,7 +359,7 @@ export default function App() {
   };
 
   return (
-    <div className="app">
+    <div className="app" data-reduced-motion={reducedMotion ? "true" : undefined}>
       <GameStageBoundary>
         <Suspense fallback={<div className="game-stage__canvas" aria-hidden="true" />}>
           <PhaserStage />
@@ -383,7 +395,9 @@ export default function App() {
           {t("storage.memoryOnly")}
         </p>
       ) : null}
-      <div className={`story-layer story-layer--${session?.step ?? "menu"}`}>{renderStory()}</div>
+      <div ref={storyLayerRef} className={`story-layer story-layer--${session?.step ?? "menu"}`}>
+        {renderStory()}
+      </div>
       <Modal open={!warningAccepted} title={t("warning.title")} dismissible={false}>
         <div className="warning-copy">
           <p>{t("warning.body")}</p>

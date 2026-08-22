@@ -52,3 +52,37 @@ describe("volatile storage warning", () => {
     expect(screen.getByRole("heading", { name: "Ajustes" })).toBeVisible();
   });
 });
+
+describe("story focus navigation", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    sessionStorage.clear();
+  });
+
+  it("focuses each new chapter without stealing focus during preference changes", async () => {
+    sessionStorage.setItem("refugee-simulator:warning-accepted", "true");
+    const user = userEvent.setup();
+    render(<App />);
+
+    const menuTitle = screen.getByRole("heading", { name: "Simulador de Refugiado", level: 1 });
+    await waitFor(() => expect(menuTitle).toHaveFocus());
+
+    const [newGame] = screen.getAllByRole("button", { name: "Juego nuevo" });
+    if (!newGame) throw new Error("Expected an empty save slot");
+    await user.click(newGame);
+    const profileTitle = screen.getByRole("heading", { name: "Creá tu personaje" });
+    await waitFor(() => expect(profileTitle).toHaveFocus());
+
+    await user.click(screen.getByRole("button", { name: "Hombre" }));
+    await user.click(screen.getByRole("button", { name: /Juventud/ }));
+    await user.click(screen.getByRole("button", { name: /^Continuar/ }));
+    const dialogue = screen.getByRole("region", { name: "Diálogo de la historia" });
+    await waitFor(() => expect(dialogue).toHaveFocus());
+
+    await user.click(screen.getByRole("button", { name: "Abrir ajustes" }));
+    const music = screen.getByRole("slider", { name: "Música" });
+    await user.click(music);
+    await user.keyboard("{ArrowRight}");
+    expect(music).toHaveFocus();
+  });
+});

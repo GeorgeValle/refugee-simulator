@@ -34,7 +34,9 @@ export function EndingScreen({ session, showCaptions, onMenu }: EndingScreenProp
     <main className="ending-screen">
       <section className="ending-hero">
         <span className="eyebrow">{t("ending.eyebrow")}</span>
-        <h1>{t("ending.title")}</h1>
+        <h1 data-story-focus="true" tabIndex={-1}>
+          {t("ending.title")}
+        </h1>
         <p>{t("story.reflection")}</p>
         {showCaptions ? (
           <p className="sound-caption sound-caption--center">{t("accessibility.softCrying")}</p>

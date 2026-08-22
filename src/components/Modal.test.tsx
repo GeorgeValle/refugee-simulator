@@ -49,6 +49,10 @@ describe("blocking overlay focus", () => {
     const user = userEvent.setup();
     render(<OrientationGuard />);
     const guard = screen.getByRole("alertdialog");
+    expect(guard).toHaveAccessibleName("Giralo para continuar");
+    expect(guard).toHaveAccessibleDescription(
+      /Este juego está diseñado.*La historia y el contador/,
+    );
     expect(guard).toHaveFocus();
     await user.tab();
     expect(guard).toHaveFocus();

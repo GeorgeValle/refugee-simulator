@@ -17,6 +17,8 @@ export function OrientationGuard() {
       className="orientation-guard"
       role="alertdialog"
       aria-modal="true"
+      aria-labelledby="orientation-title"
+      aria-describedby="orientation-description orientation-paused"
       tabIndex={-1}
       onKeyDown={(event) => {
         if (event.key === "Tab") {
@@ -28,9 +30,9 @@ export function OrientationGuard() {
       <div className="orientation-guard__phone" aria-hidden="true">
         <span />
       </div>
-      <h1>{t("orientation.title")}</h1>
-      <p>{t("orientation.body")}</p>
-      <small>{t("orientation.paused")}</small>
+      <h1 id="orientation-title">{t("orientation.title")}</h1>
+      <p id="orientation-description">{t("orientation.body")}</p>
+      <small id="orientation-paused">{t("orientation.paused")}</small>
     </div>
   );
 }

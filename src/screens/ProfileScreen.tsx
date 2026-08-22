@@ -23,7 +23,9 @@ export function ProfileScreen({ initialProfile, onSubmit }: ProfileScreenProps) 
     <main className="panel-screen panel-screen--profile">
       <section className="form-card">
         <span className="eyebrow">{t("profile.eyebrow")}</span>
-        <h1>{t("profile.title")}</h1>
+        <h1 data-story-focus="true" tabIndex={-1}>
+          {t("profile.title")}
+        </h1>
         <fieldset className="choice-group">
           <legend>{t("profile.genderQuestion")}</legend>
           <div className="choice-grid choice-grid--two">
