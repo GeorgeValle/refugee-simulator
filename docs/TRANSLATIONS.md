@@ -27,8 +27,9 @@ debe comparar frases traducidas ni depender del orden de palabras.
 ## Convenciones
 
 - Mantener grupos de claves descriptivos dentro del único namespace i18next actual, `translation`.
-  Entre los grupos existentes están `common`, `menu`, `settings`, `profile`, `family`, `packing`,
-  `story` y `accessibility`; no asumir grupos `forms` o `audio` que aún no existen.
+  Entre los grupos existentes están `common`, `menu`, `settings`, `profile`, `family`, `slips`,
+  `story` y `accessibility`. La preparación usa claves anidadas bajo `story.packing`; no existe
+  un grupo raíz `packing` ni deben asumirse grupos `forms` o `audio` que aún no existen.
 - Preferir claves estables y descriptivas antes que claves basadas en texto.
 - Usar interpolación para nombres, cantidades y tiempos; no concatenar frases desde React.
 - Mantener género, número, formalidad y longitud adecuados al idioma destino.
