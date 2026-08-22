@@ -26,6 +26,16 @@ ni telemetría.
 - Navegación por teclado, foco visible, objetivos táctiles de 44 px y HTML semántico.
 - Datos educativos estáticos de ACNUR para conservar el funcionamiento sin red.
 
+## Documentación
+
+- [Requisitos del proyecto](project-requirements.md)
+- [Guía para agentes y colaboradores](AGENTS.md)
+- [Diseño narrativo](docs/NARRATIVE_DESIGN.md)
+- [Estrategia de traducciones](docs/TRANSLATIONS.md)
+- [Hoja de ruta](docs/ROADMAP.md)
+- [Changelog](CHANGELOG.md)
+- [Arte y procedencia](docs/ART_ASSETS.md)
+
 ## Tecnologías
 
 | Área | Tecnología |
