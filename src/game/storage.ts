@@ -21,6 +21,11 @@ export type PersistenceResult = (typeof PERSISTENCE_RESULT)[keyof typeof PERSIST
 
 type StorageProvider = () => Storage;
 
+interface SessionsReadResult {
+  sessions: GameSession[];
+  available: boolean;
+}
+
 function writeStorage(provider: StorageProvider, key: string, value: string): boolean {
   try {
     provider().setItem(key, value);
@@ -30,27 +35,71 @@ function writeStorage(provider: StorageProvider, key: string, value: string): bo
   }
 }
 
-function readSessions(provider: StorageProvider): GameSession[] {
+function readSessions(provider: StorageProvider): SessionsReadResult {
+  let raw: string | null;
   try {
-    const raw = provider().getItem(SAVES_KEY);
-    if (!raw) return [];
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.flatMap((candidate) => {
+    raw = provider().getItem(SAVES_KEY);
+  } catch {
+    return { sessions: [], available: false };
+  }
+  if (!raw) return { sessions: [], available: true };
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return { sessions: [], available: true };
+  }
+  if (!Array.isArray(parsed)) return { sessions: [], available: true };
+  return {
+    sessions: parsed.flatMap((candidate) => {
       const result = gameSessionSchema.safeParse(candidate);
       return result.success ? [result.data] : [];
-    });
-  } catch {
-    return [];
+    }),
+    available: true,
+  };
+}
+
+function applySessionMutations(
+  sessions: GameSession[],
+  mutations: ReadonlyMap<SaveSlotId, GameSession | null>,
+): GameSession[] {
+  const bySlot = new Map(sessions.map((session) => [session.slotId, session]));
+  for (const [slotId, session] of mutations) {
+    if (session) bySlot.set(slotId, session);
+    else bySlot.delete(slotId);
   }
+  return SAVE_SLOT_IDS.flatMap((slotId) => {
+    const session = bySlot.get(slotId);
+    return session ? [session] : [];
+  });
 }
 
 export function createSaveRepository(provider: StorageProvider = () => localStorage) {
   let snapshot: GameSession[] | null = null;
+  const pendingMutations = new Map<SaveSlotId, GameSession | null>();
 
   const sessions = () => {
-    snapshot ??= readSessions(provider);
+    const persisted = readSessions(provider);
+    if (persisted.available) {
+      snapshot = applySessionMutations(persisted.sessions, pendingMutations);
+    } else {
+      snapshot = applySessionMutations(snapshot ?? [], pendingMutations);
+    }
     return snapshot;
+  };
+
+  const persistMutation = (slotId: SaveSlotId, session: GameSession | null): PersistenceResult => {
+    pendingMutations.set(slotId, session);
+    const persisted = readSessions(provider);
+    snapshot = applySessionMutations(
+      persisted.available ? persisted.sessions : (snapshot ?? []),
+      pendingMutations,
+    );
+    if (!persisted.available || !writeStorage(provider, SAVES_KEY, JSON.stringify(snapshot))) {
+      return PERSISTENCE_RESULT.MEMORY;
+    }
+    pendingMutations.clear();
+    return PERSISTENCE_RESULT.PERSISTENT;
   };
 
   return {
@@ -67,19 +116,10 @@ export function createSaveRepository(provider: StorageProvider = () => localStor
     save(session: GameSession): PersistenceResult {
       const result = gameSessionSchema.safeParse(session);
       if (!result.success) return PERSISTENCE_RESULT.INVALID;
-      snapshot = [
-        ...sessions().filter((candidate) => candidate.slotId !== result.data.slotId),
-        result.data,
-      ];
-      return writeStorage(provider, SAVES_KEY, JSON.stringify(snapshot))
-        ? PERSISTENCE_RESULT.PERSISTENT
-        : PERSISTENCE_RESULT.MEMORY;
+      return persistMutation(result.data.slotId, result.data);
     },
     delete(slotId: SaveSlotId): PersistenceResult {
-      snapshot = sessions().filter((session) => session.slotId !== slotId);
-      return writeStorage(provider, SAVES_KEY, JSON.stringify(snapshot))
-        ? PERSISTENCE_RESULT.PERSISTENT
-        : PERSISTENCE_RESULT.MEMORY;
+      return persistMutation(slotId, null);
     },
   };
 }
