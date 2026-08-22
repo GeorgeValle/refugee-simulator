@@ -51,6 +51,8 @@ export function LossScreen({
 
   const activeSlips = session.slips.filter((slip) => slip.status === SLIP_STATUS.ACTIVE);
   const seconds = Math.max(0, Math.ceil(remainingMs / 1000));
+  const timerAnnouncement =
+    seconds === 3 ? t("loss.timeLeft", { seconds }) : seconds === 0 ? t("loss.timeExpired") : "";
   return (
     <main className="panel-screen panel-screen--loss">
       <section className="loss-board">
@@ -64,13 +66,22 @@ export function LossScreen({
             </h1>
           </div>
           {timed ? (
-            <div className={`timer${seconds <= 3 ? " timer--urgent" : ""}`} aria-live="assertive">
+            <div
+              className={`timer${seconds <= 3 ? " timer--urgent" : ""}`}
+              role="timer"
+              aria-label={t("loss.timeLeft", { seconds })}
+            >
               <span className="timer__number">{seconds}</span>
               <span>{t("common.seconds")}</span>
               <div className="timer__track" aria-hidden="true">
                 <span style={{ width: `${Math.min(100, (remainingMs / 10_000) * 100)}%` }} />
               </div>
             </div>
+          ) : null}
+          {timed ? (
+            <span className="u-visually-hidden" role="status" aria-live="polite" aria-atomic="true">
+              {timerAnnouncement}
+            </span>
           ) : null}
         </div>
         <p className="loss-board__count" aria-live="polite">
