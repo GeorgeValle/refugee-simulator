@@ -203,6 +203,10 @@ Por eso solo obliga a girar teléfonos; tabletas y escritorios continúan de for
 normal no puede garantizar el bloqueo físico del dispositivo, por lo que se aplica un bloqueo visual,
 de interacción, audio y temporizador.
 
+En orientación horizontal, la aplicación se centra dentro de un marco 16:9 y usa el fondo nocturno
+como letterboxing cuando la relación del viewport no coincide. El aviso de rotación permanece fijo
+sobre el viewport completo y los controles principales conservan un área táctil mínima de 44 × 44 px.
+
 La preferencia `prefers-reduced-motion: reduce` se combina con el ajuste manual. Los destellos de
 Phaser se desactivan y el texto deja de escribirse progresivamente. Las descripciones de sonido se
 pueden ocultar sin silenciar el audio, y cada canal tiene control independiente.

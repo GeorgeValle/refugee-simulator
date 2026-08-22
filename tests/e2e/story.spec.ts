@@ -1,18 +1,32 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
+
+async function expectNoSeriousAxeViolations(page: Page) {
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(
+    results.violations.filter(({ impact }) => impact === "critical" || impact === "serious"),
+  ).toEqual([]);
+}
 
 async function acceptWarning(page: Page) {
   await page.getByRole("button", { name: "Entiendo y quiero continuar" }).click();
 }
 
-async function reachTimedLoss(page: Page) {
+async function reachTimedLoss(page: Page, auditAccessibility = false) {
   await page.getByRole("button", { name: "Juego nuevo" }).first().click();
+  if (auditAccessibility) await expectNoSeriousAxeViolations(page);
   await page.getByRole("button", { name: "Hombre" }).click();
   await page.getByRole("button", { name: "Juventud" }).click();
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByRole("button", { name: "Continuar" }).click();
+  if (auditAccessibility) await expectNoSeriousAxeViolations(page);
 
   const relationships = page.getByRole("combobox");
+  const familyFieldHeights = await page
+    .locator(".family-card input, .family-card select")
+    .evaluateAll((fields) => fields.map((field) => field.getBoundingClientRect().height));
+  expect(familyFieldHeights.every((height) => height >= 44)).toBe(true);
   await relationships.nth(0).selectOption("wife");
   await relationships.nth(1).selectOption("daughter");
   await relationships.nth(2).selectOption("brother");
@@ -22,6 +36,12 @@ async function reachTimedLoss(page: Page) {
     await names.nth(index).fill(name);
   }
   await page.getByRole("button", { name: "Continuar" }).click();
+  if (auditAccessibility) await expectNoSeriousAxeViolations(page);
+
+  const packingInputHeights = await page
+    .locator(".lined-field input")
+    .evaluateAll((inputs) => inputs.map((input) => input.getBoundingClientRect().height));
+  expect(packingInputHeights.every((height) => height >= 44)).toBe(true);
 
   for (const [index, object] of [
     "una foto",
@@ -36,6 +56,7 @@ async function reachTimedLoss(page: Page) {
   await page.getByLabel("Ropa favorita").fill("mi abrigo azul");
   await page.getByLabel("Sueño que anhelás alcanzar").fill("abrir una escuela");
   await page.getByRole("button", { name: "Continuar" }).click();
+  if (auditAccessibility) await expectNoSeriousAxeViolations(page);
 
   const firstLossChoices = page.locator(".paper-slip--button");
   await firstLossChoices.nth(0).click();
@@ -43,6 +64,7 @@ async function reachTimedLoss(page: Page) {
   await page.getByRole("button", { name: "Dejarlos atrás" }).click();
   await page.getByRole("button", { name: "Continuar" }).click();
   await expect(page.getByRole("heading", { name: "Elegí dos papelitos" })).toBeVisible();
+  if (auditAccessibility) await expectNoSeriousAxeViolations(page);
 }
 
 test("mantiene la interfaz si falla el escenario Phaser", async ({ page }) => {
@@ -87,7 +109,7 @@ test("completa la historia y conserva las decisiones", async ({ page }) => {
   await page.goto("/");
   await acceptWarning(page);
   await expect(page.locator("canvas")).toBeVisible();
-  await reachTimedLoss(page);
+  await reachTimedLoss(page, true);
 
   const timedChoices = page.locator(".paper-slip--button");
   await timedChoices.nth(0).click();
@@ -97,11 +119,13 @@ test("completa la historia y conserva las decisiones", async ({ page }) => {
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByRole("button", { name: "Correr por tu vida" }).click();
   await expect(page.getByText("Llanto tenue y sonidos distantes del campamento")).toBeVisible();
+  await expectNoSeriousAxeViolations(page);
   await page.getByRole("button", { name: "Continuar" }).click();
 
   await expect(page.getByRole("heading", { name: "Lo que quedó atrás" }).first()).toBeVisible();
   await expect(page.getByText("117,8 millones")).toBeVisible();
   await expect(page.getByText(/No sabés qué ocurrió después/).first()).toBeVisible();
+  await expectNoSeriousAxeViolations(page);
 
   await page.reload();
   await page.getByRole("button", { name: "Continuar partida" }).click();

@@ -49,6 +49,12 @@ test("mueve el foco solo al cambiar de capítulo", async ({ page }) => {
   await music.focus();
   await music.press("ArrowRight");
   await expect(music).toBeFocused();
+  const settingsResults = await new AxeBuilder({ page }).analyze();
+  expect(
+    settingsResults.violations.filter(
+      ({ impact }) => impact === "critical" || impact === "serious",
+    ),
+  ).toEqual([]);
 });
 
 test("el ajuste manual reduce también la animación del aviso de orientación", async ({
@@ -65,6 +71,10 @@ test("el ajuste manual reduce también la animación del aviso de orientación",
   await page.setViewportSize({ width: 390, height: 844 });
   const guard = page.getByRole("alertdialog", { name: "Giralo para continuar" });
   await expect(guard).toBeVisible();
+  await expect(guard).toHaveCSS("position", "fixed");
+  const guardBox = await guard.boundingBox();
+  expect(guardBox?.width).toBe(390);
+  expect(guardBox?.height).toBe(844);
   const animationDuration = await page
     .locator(".orientation-guard__phone")
     .evaluate((element) => getComputedStyle(element).animationDuration);
@@ -74,4 +84,36 @@ test("el ajuste manual reduce también la animación del aviso de orientación",
   expect(
     results.violations.filter(({ impact }) => impact === "critical" || impact === "serious"),
   ).toEqual([]);
+});
+
+test("mantiene un marco 16:9 y objetivos táctiles de 44 px", async ({ page }, testInfo) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Entiendo y quiero continuar" }).click();
+
+  const appBox = await page.locator(".app").boundingBox();
+  if (!appBox) throw new Error("Expected the application frame");
+  expect(appBox.width / appBox.height).toBeCloseTo(16 / 9, 2);
+  if (testInfo.project.name === "phone-landscape") expect(appBox.width).toBeLessThan(844);
+
+  const buttonSizes = await page.locator("button:visible").evaluateAll((buttons) =>
+    buttons.map((button) => {
+      const box = button.getBoundingClientRect();
+      return { width: box.width, height: box.height };
+    }),
+  );
+  expect(buttonSizes.every(({ width, height }) => width >= 44 && height >= 44)).toBe(true);
+
+  await page.getByRole("button", { name: "Abrir ajustes" }).click();
+  const sliderHeights = await page
+    .locator('input[type="range"]')
+    .evaluateAll((inputs) => inputs.map((input) => input.getBoundingClientRect().height));
+  expect(sliderHeights.every((height) => height >= 44)).toBe(true);
+  await page.getByRole("button", { name: "Cerrar" }).click();
+
+  await page.getByRole("button", { name: "Juego nuevo" }).first().click();
+  await page.getByRole("button", { name: "Simulador de Refugiado" }).click();
+  const occupiedActionHeights = await page
+    .locator(".save-card--filled button")
+    .evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().height));
+  expect(occupiedActionHeights.every((height) => height >= 44)).toBe(true);
 });
