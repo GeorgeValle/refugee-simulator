@@ -1,0 +1,236 @@
+{
+  "app": {
+    "title": "Simulador de Refugiado",
+    "subtitle": "Una historia sobre aquello que queda atrás",
+    "languageName": "Español (Argentina)"
+  },
+  "common": {
+    "continue": "Continuar",
+    "back": "Volver",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "delete": "Eliminar",
+    "selected": "Seleccionado",
+    "of": "de",
+    "seconds": "segundos",
+    "required": "Este campo es obligatorio.",
+    "tooLong": "El texto es demasiado largo.",
+    "openSettings": "Abrir ajustes",
+    "skip": "Mostrar todo el texto"
+  },
+  "warning": {
+    "title": "Antes de comenzar",
+    "body": "Esta experiencia educativa aborda guerra, desplazamiento forzado, separación familiar y trauma. No contiene violencia gráfica. Podés detenerte cuando lo necesites.",
+    "fiction": "La ciudad, sus habitantes y el grupo armado son ficticios. La historia reúne situaciones que pueden atravesar muchas personas, pero no representa una experiencia universal.",
+    "accept": "Entiendo y quiero continuar"
+  },
+  "menu": {
+    "newGame": "Juego nuevo",
+    "continueGame": "Continuar partida",
+    "emptySlot": "Ranura vacía",
+    "slot": "Partida {{number}}",
+    "lastPlayed": "Última partida: {{date}}",
+    "chapter": "Capítulo: {{chapter}}",
+    "profile": "{{gender}}, {{age}}",
+    "overwriteTitle": "¿Reemplazar esta partida?",
+    "overwriteBody": "El progreso guardado en esta ranura se perderá.",
+    "deleteTitle": "¿Eliminar esta partida?",
+    "deleteBody": "Esta acción no se puede deshacer.",
+    "startHere": "Elegí una ranura para comenzar",
+    "localOnly": "Tus decisiones se guardan solamente en este navegador."
+  },
+  "settings": {
+    "title": "Ajustes",
+    "music": "Música",
+    "effects": "Efectos",
+    "voices": "Voces y ambiente humano",
+    "captions": "Subtítulos de sonido",
+    "reducedMotion": "Reducir movimiento y destellos",
+    "mute": "Silenciar todo",
+    "language": "Idioma",
+    "languageHint": "La primera versión está disponible en español."
+  },
+  "orientation": {
+    "title": "Giralo para continuar",
+    "body": "Este juego está diseñado para verse con el celular en posición horizontal.",
+    "paused": "La historia y el contador están pausados mientras girás el dispositivo."
+  },
+  "storage": {
+    "memoryOnly": "No pudimos guardar en este navegador. Podés seguir jugando en esta pestaña, pero los cambios se perderán al recargarla o cerrarla."
+  },
+  "profile": {
+    "eyebrow": "Tu historia comienza acá",
+    "title": "Creá tu personaje",
+    "genderQuestion": "¿Hombre o mujer?",
+    "ageQuestion": "¿Qué edad tenés?",
+    "genderRequired": "Elegí una opción.",
+    "ageRequired": "Elegí una franja de edad."
+  },
+  "gender": {
+    "man": "Hombre",
+    "woman": "Mujer"
+  },
+  "age": {
+    "childhood": "Niñez",
+    "adolescence": "Adolescencia",
+    "youth": "Juventud",
+    "adulthood": "Adultez",
+    "oldAge": "Vejez"
+  },
+  "relationship": {
+    "daughter": "hija",
+    "son": "hijo",
+    "wife": "esposa",
+    "husband": "esposo",
+    "brother": "hermano",
+    "sister": "hermana",
+    "uncle": "tío",
+    "aunt": "tía",
+    "father": "padre",
+    "mother": "madre",
+    "grandfather": "abuelo",
+    "grandmother": "abuela"
+  },
+  "story": {
+    "apartment": {
+      "speaker": "Narración",
+      "body": "Vivís en Nahr, una ciudad de calles angostas, mercados luminosos y balcones que miran hacia el río. La guerra parecía lejana, pero esta noche los relámpagos que iluminan el cielo no vienen de una tormenta."
+    },
+    "television": {
+      "speaker": "Televisor",
+      "body": "Una caravana armada cruzó la ciudad vecina. Calculan que llegará a Nahr en menos de un día. No te queda otra que escapar con quienes viven junto a vos."
+    },
+    "familyIntro": "¿Con quiénes vivís? Elegí cuatro familiares y escribí sus nombres.",
+    "packing": {
+      "speaker": "Narración",
+      "body": "Están muy tristes. Solo pueden llevar aquello que entra en sus manos. Cada papel representa una persona, una pertenencia o una parte de la vida que construiste."
+    },
+    "firstLoss": {
+      "speaker": "Narración",
+      "body": "Lamentablemente, no podés llevar todo en la huida. Elegí dos papelitos que tendrán que quedar atrás."
+    },
+    "village": {
+      "speaker": "Habitante del pueblo",
+      "body": "¡Tenemos que irnos! Los soldados están a pocas horas. No hay tiempo para discutir ni para preparar más equipaje."
+    },
+    "timedLoss": {
+      "speaker": "Narración",
+      "body": "Tenés diez segundos para elegir dos cosas más que no podrán seguir con vos. Si el tiempo termina, la urgencia decidirá por vos."
+    },
+    "journey": {
+      "speaker": "Narración",
+      "body": "Caminan durante dos días. El polvo se pega a la ropa y cada paso pesa más que el anterior. Al caer la noche encuentran una diminuta aldea junto al bosque."
+    },
+    "forest": {
+      "speaker": "Narración",
+      "body": "Al caer la noche llegan a una diminuta aldea junto al bosque. Una familia les presta una habitación. Por un momento creen estar a salvo y pueden cerrar los ojos."
+    },
+    "armed": {
+      "speaker": "Narración",
+      "body": "Voces y golpes irrumpen en la habitación. Dos integrantes de un grupo armado les quitan lo primero que encuentran. No hay tiempo para resistirse: solo pueden correr."
+    },
+    "armedCaption": "Gritos y órdenes ininteligibles. Objetos golpean el suelo.",
+    "escape": "Correr por tu vida",
+    "camp": {
+      "speaker": "Narración",
+      "body": "Corriste hasta que ya no sentías las piernas. Llegaste a un campamento de refugiados: una carpa, agua racionada y casi ninguna comodidad. Detrás quedaron la ciudad que amabas, tus vecinos y una parte de tu vida."
+    },
+    "reflection": "Esto no es un puntaje. Cada papel perdido representa una ruptura: personas separadas, objetos irremplazables, proyectos interrumpidos y sueños postergados. Millones de personas cargan pérdidas como estas, además del trauma de tener que huir una y otra vez.",
+    "notUniversal": "Ninguna experiencia de refugio es idéntica. Escuchar a las personas desplazadas y defender su derecho a vivir con seguridad también es una forma de actuar."
+  },
+  "family": {
+    "title": "Tu familia",
+    "instructions": "Completá cuatro personas. Algunos parentescos pueden repetirse.",
+    "member": "Familiar {{number}}",
+    "relationship": "Parentesco",
+    "name": "Nombre",
+    "namePlaceholder": "Escribí su nombre",
+    "relationshipPlaceholder": "Elegí un parentesco",
+    "duplicate": "Ese parentesco solo puede elegirse una vez.",
+    "portraitAlt": "Retrato simbólico de {{name}}, tu {{relationship}}"
+  },
+  "slips": {
+    "family": "Familiar",
+    "title": "Lo que forma parte de tu vida",
+    "instructions": "Escribí cuatro objetos que puedan llevar en las manos y completá los otros fragmentos.",
+    "object": "Objeto {{number}}",
+    "objectPlaceholder": "Ej.: una fotografía",
+    "profession": "Profesión",
+    "professionPlaceholder": "Ej.: docente",
+    "skill": "Habilidad",
+    "skillPlaceholder": "Ej.: reparar motores",
+    "clothing": "Ropa favorita",
+    "clothingPlaceholder": "Ej.: mi abrigo azul",
+    "dream": "Sueño que anhelás alcanzar",
+    "dreamPlaceholder": "Ej.: abrir mi propio taller",
+    "familyCategory": "Familia",
+    "objectsCategory": "Objetos",
+    "identityCategory": "Identidad y futuro",
+    "kept": "Todavía con vos",
+    "lost": "Quedó atrás"
+  },
+  "loss": {
+    "title": "Elegí dos papelitos",
+    "selectedCount": "Elegiste {{count}} de 2",
+    "confirm": "Dejarlos atrás",
+    "timeLeft": "{{seconds}} segundos",
+    "timeExpired": "El tiempo terminó",
+    "firstDeparture": "Primera huida",
+    "villageEscape": "Huida del pueblo",
+    "armedGroup": "Ataque en la aldea",
+    "family": "Te separaste de {{name}}, tu {{relationship}}. No sabés qué ocurrió después.",
+    "object": "Tuviste que dejar {{value}}.",
+    "profession": "Tu trabajo como {{value}} quedó interrumpido.",
+    "skill": "Ya no encontraste dónde ejercer tu habilidad: {{value}}.",
+    "clothing": "Tu ropa favorita, {{value}}, quedó atrás.",
+    "dream": "Tu sueño —{{value}}— quedó postergado.",
+    "none": "No hay pérdidas registradas en esta categoría."
+  },
+  "ending": {
+    "eyebrow": "Llegaste al campamento",
+    "title": "Lo que quedó atrás",
+    "remainingTitle": "Lo que todavía llevás con vos",
+    "factsTitle": "El desplazamiento forzado en cifras",
+    "factsIntro": "Datos mundiales de ACNUR correspondientes al cierre de 2025, publicados el 11 de junio de 2026.",
+    "sourceEyebrow": "ACNUR · 2026",
+    "factDisplacedValue": "117,8 millones",
+    "factDisplacedLabel": "de personas desplazadas forzosamente",
+    "factChildrenValue": "38%",
+    "factChildrenLabel": "son menores de 18 años",
+    "factIncomeValue": "68%",
+    "factIncomeLabel": "son acogidas en países de ingresos bajos o medios",
+    "factNeighbourValue": "65%",
+    "factNeighbourLabel": "viven en países vecinos al de origen",
+    "source": "Consultar la fuente de ACNUR",
+    "restart": "Volver al menú"
+  },
+  "chapters": {
+    "createProfile": "Creación del personaje",
+    "apartment": "La noche de las luces",
+    "television": "La noticia",
+    "family": "Quienes viven con vos",
+    "packing": "Lo que podés llevar",
+    "firstLoss": "La primera renuncia",
+    "village": "El pueblo",
+    "timedLoss": "Diez segundos",
+    "journey": "Dos días a pie",
+    "forest": "La aldea del bosque",
+    "armedEncounter": "La irrupción",
+    "camp": "El campamento",
+    "ending": "Lo que quedó atrás"
+  },
+  "accessibility": {
+    "gameStage": "Escenario visual de la novela",
+    "dialogue": "Diálogo de la historia",
+    "paperSelected": "Papel seleccionado: {{label}}",
+    "paperUnselected": "Papel desmarcado: {{label}}",
+    "timerPaused": "Contador pausado",
+    "timerResumed": "Contador reanudado",
+    "explosion": "Una explosión distante ilumina brevemente el cielo",
+    "clock": "El reloj marca cada segundo",
+    "footsteps": "Pasos cansados sobre el camino",
+    "softCrying": "Llanto tenue y sonidos distantes del campamento",
+    "soundCaption": "Descripción de sonido"
+  }
+}
