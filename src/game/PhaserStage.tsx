@@ -24,7 +24,7 @@ export function PhaserStage() {
         powerPreference: "high-performance",
       },
       audio: {
-        disableWebAudio: false,
+        noAudio: true,
       },
     });
     return () => game.destroy(true);

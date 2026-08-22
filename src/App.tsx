@@ -71,6 +71,7 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
   const portraitPhone = usePortraitPhone();
+  const gameplayPaused = portraitPhone || settingsOpen;
   const systemReducedMotion = useSystemReducedMotion();
   const reducedMotion = preferences.reducedMotion || systemReducedMotion;
   const audioUnlockedRef = useRef(false);
@@ -112,18 +113,21 @@ export default function App() {
   }, [reducedMotion, visualFamily, visualProfile, visualStep]);
 
   useEffect(() => {
-    gameBridge.emit("pause", portraitPhone);
+    gameBridge.emit("pause", gameplayPaused);
+  }, [gameplayPaused]);
+
+  useEffect(() => {
     if (timerStep !== STORY_STEP.TIMED_LOSS) return;
-    if (portraitPhone && timerDeadline !== null) {
+    if (gameplayPaused && timerDeadline !== null) {
       setSession((current) =>
         current ? gameReducer(current, { type: GAME_EVENT.PAUSE_TIMER }) : current,
       );
-    } else if (!portraitPhone && timerRemainingMs !== null) {
+    } else if (!gameplayPaused && timerRemainingMs !== null) {
       setSession((current) =>
         current ? gameReducer(current, { type: GAME_EVENT.RESUME_TIMER }) : current,
       );
     }
-  }, [portraitPhone, timerDeadline, timerRemainingMs, timerStep]);
+  }, [gameplayPaused, timerDeadline, timerRemainingMs, timerStep]);
 
   useEffect(() => {
     const unlockAudio = () => {
@@ -232,7 +236,7 @@ export default function App() {
           <LossScreen
             session={session}
             timed={false}
-            paused={portraitPhone}
+            paused={gameplayPaused}
             onToggle={(slipId) => dispatchGame({ type: GAME_EVENT.TOGGLE_PENDING_LOSS, slipId })}
             onConfirm={() =>
               dispatchMany(
@@ -258,7 +262,7 @@ export default function App() {
           <LossScreen
             session={session}
             timed
-            paused={portraitPhone}
+            paused={gameplayPaused}
             onToggle={(slipId) => dispatchGame({ type: GAME_EVENT.TOGGLE_PENDING_LOSS, slipId })}
             onConfirm={() => dispatchGame({ type: GAME_EVENT.COMMIT_TIMED_LOSSES })}
             onExpire={() => dispatchGame({ type: GAME_EVENT.COMMIT_TIMED_LOSSES })}

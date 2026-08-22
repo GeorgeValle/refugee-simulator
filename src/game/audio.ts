@@ -46,15 +46,22 @@ export class ProceduralAudioDirector {
   }
 
   pause(): void {
+    if (this.paused) return;
     this.paused = true;
     this.stopScene();
     if (this.context?.state === "running") void this.context.suspend();
   }
 
   resume(): void {
+    if (!this.paused) return;
     this.paused = false;
-    if (this.context) {
-      void this.context.resume().then(() => this.startScene(this.scene));
+    const context = this.context;
+    if (context) {
+      void context.resume().then(() => {
+        if (!this.paused && this.context === context && this.activeNodes.length === 0) {
+          this.startScene(this.scene);
+        }
+      });
     }
   }
 

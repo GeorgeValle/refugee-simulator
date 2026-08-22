@@ -107,3 +107,73 @@ test("pausa el contador al pasar un teléfono a vertical", async ({ page }, test
   expect(resumed.timerDeadline).toBeGreaterThan(Date.now());
   expect(resumed.losses).toHaveLength(2);
 });
+
+test("pausa el contador mientras Ajustes está abierto", async ({ page }) => {
+  await page.goto("/");
+  await acceptWarning(page);
+  await reachTimedLoss(page);
+
+  await page.getByRole("button", { name: "Abrir ajustes" }).click();
+  await expect(page.getByRole("heading", { name: "Ajustes" })).toBeVisible();
+  await page.waitForTimeout(300);
+
+  const paused = await page.evaluate(() => {
+    const sessions = JSON.parse(localStorage.getItem("refugee-simulator:saves:v1") ?? "[]");
+    return sessions[0];
+  });
+  expect(paused.timerDeadline).toBeNull();
+  expect(paused.timerRemainingMs).toBeGreaterThan(0);
+  const remaining = paused.timerRemainingMs;
+
+  await page.waitForTimeout(1_200);
+  const stillPaused = await page.evaluate(() => {
+    const sessions = JSON.parse(localStorage.getItem("refugee-simulator:saves:v1") ?? "[]");
+    return sessions[0];
+  });
+  expect(stillPaused.timerRemainingMs).toBe(remaining);
+  expect(stillPaused.losses).toHaveLength(2);
+
+  await page.getByRole("button", { name: "Cerrar" }).click();
+  await page.waitForTimeout(300);
+  const resumed = await page.evaluate(() => {
+    const sessions = JSON.parse(localStorage.getItem("refugee-simulator:saves:v1") ?? "[]");
+    return sessions[0];
+  });
+  expect(resumed.timerRemainingMs).toBeNull();
+  expect(resumed.timerDeadline).toBeGreaterThan(Date.now());
+  expect(resumed.losses).toHaveLength(2);
+});
+
+test("reanuda una sola vez después de cerrar Ajustes y volver a horizontal", async (
+  { page },
+  testInfo,
+) => {
+  test.skip(testInfo.project.name !== "phone-landscape", "Solo corresponde al proyecto móvil");
+  await page.goto("/");
+  await acceptWarning(page);
+  await reachTimedLoss(page);
+
+  await page.getByRole("button", { name: "Abrir ajustes" }).click();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.getByRole("heading", { name: "Giralo para continuar" })).toBeVisible();
+  await page.setViewportSize({ width: 844, height: 390 });
+  await expect(page.getByRole("heading", { name: "Giralo para continuar" })).toBeHidden();
+  await page.waitForTimeout(300);
+
+  const stillPaused = await page.evaluate(() => {
+    const sessions = JSON.parse(localStorage.getItem("refugee-simulator:saves:v1") ?? "[]");
+    return sessions[0];
+  });
+  expect(stillPaused.timerDeadline).toBeNull();
+  expect(stillPaused.timerRemainingMs).toBeGreaterThan(0);
+
+  await page.getByRole("button", { name: "Cerrar" }).click();
+  await page.waitForTimeout(300);
+  const resumed = await page.evaluate(() => {
+    const sessions = JSON.parse(localStorage.getItem("refugee-simulator:saves:v1") ?? "[]");
+    return sessions[0];
+  });
+  expect(resumed.timerRemainingMs).toBeNull();
+  expect(resumed.timerDeadline).toBeGreaterThan(Date.now());
+  expect(resumed.losses).toHaveLength(2);
+});
