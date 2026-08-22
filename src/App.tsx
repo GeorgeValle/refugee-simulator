@@ -172,8 +172,8 @@ export default function App() {
   }, []);
 
   const beginNew = (slotId: SaveSlotId) => {
-    const occupied = slots.some((slot) => slot.slotId === slotId && slot.session);
-    if (occupied) {
+    if (saveRepository.load(slotId)) {
+      refreshSlots();
       setConfirmAction({ kind: "overwrite", slotId });
       return;
     }

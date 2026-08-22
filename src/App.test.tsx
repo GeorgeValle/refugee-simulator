@@ -1,8 +1,9 @@
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "@/App";
-import { PERSISTENCE_RESULT, preferencesRepository } from "@/game/storage";
+import { createSession } from "@/game/model";
+import { createSaveRepository, PERSISTENCE_RESULT, preferencesRepository } from "@/game/storage";
 import "@/i18n";
 
 vi.mock("@/game/PhaserStage", () => ({ PhaserStage: () => null }));
@@ -84,5 +85,33 @@ describe("story focus navigation", () => {
     await user.click(music);
     await user.keyboard("{ArrowRight}");
     expect(music).toHaveFocus();
+  });
+});
+
+describe("stale save slot protection", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    sessionStorage.setItem("refugee-simulator:warning-accepted", "true");
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
+  it("rechecks an apparently empty slot before replacing another tab's save", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const [newGame] = screen.getAllByRole("button", { name: "Juego nuevo" });
+    if (!newGame) throw new Error("Expected an empty save slot");
+    const otherTab = createSaveRepository();
+    const externalSession = createSession(1, 1_000);
+    expect(otherTab.save(externalSession)).toBe(PERSISTENCE_RESULT.PERSISTENT);
+
+    await user.click(newGame);
+
+    expect(screen.getByRole("dialog", { name: "¿Reemplazar esta partida?" })).toBeVisible();
+    expect(screen.queryByRole("heading", { name: "Creá tu personaje" })).not.toBeInTheDocument();
+    expect(otherTab.load(1)?.id).toBe(externalSession.id);
   });
 });
