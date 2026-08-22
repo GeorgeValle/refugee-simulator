@@ -50,10 +50,12 @@ Los sorteos son deterministas en pruebas y no se repiten al recargar una decisi�
 
 ## Accessibility and mobile
 
-- Teléfonos de menos de 768 px en orientación vertical muestran un bloqueo localizado y pausan
-  Phaser, audio y contador.
-- En horizontal se usa un marco 16:9 con letterboxing; tabletas y escritorios verticales no están
-  obligados a rotar.
+- Cualquier viewport de hasta 767 px de ancho en orientación vertical muestra un bloqueo localizado
+  y pausa Phaser, audio y contador. El criterio actual usa únicamente orientación y ancho, por lo
+  que también puede aplicarse a tabletas pequeñas o ventanas de escritorio estrechas; no detecta de
+  forma fiable el tipo de dispositivo.
+- En horizontal se usa un marco 16:9 con letterboxing. Los viewports verticales de más de 767 px
+  continúan con el diseño responsivo sin bloqueo obligatorio.
 - Navegación por teclado, foco visible, nombres accesibles, subtítulos sonoros y objetivos táctiles
   principales de al menos 44 × 44 px.
 - La reducción de movimiento combina la preferencia del sistema y el ajuste manual.

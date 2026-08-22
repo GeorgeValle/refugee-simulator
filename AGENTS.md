@@ -7,6 +7,7 @@
 - `CHANGELOG.md`: cambios agrupados por versión o Pull Request.
 - `docs/NARRATIVE_DESIGN.md`: recorrido narrativo, reglas de representación y contenido.
 - `docs/TRANSLATIONS.md`: estrategia para futuras traducciones y mantenimiento de i18next.
+- `docs/FUTURE-IMPLEMENTATIONS.md`: propuestas técnicas futuras que aún no modifican el runtime.
 - `docs/ROADMAP.md`: mejoras futuras priorizadas.
 - `docs/ART_ASSETS.md`: arte distribuible, procedencia y referencias excluidas.
 - `docs/iu/`: referencias privadas locales; nunca se versionan ni se importan desde la aplicación.

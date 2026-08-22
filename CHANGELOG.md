@@ -5,6 +5,7 @@
 - Añadida la guía raíz `AGENTS.md` con el mapa documental y las reglas de ramas, commits, reviews y merge.
 - Documentados requisitos y arquitectura en `project-requirements.md`.
 - Añadidos el diseño narrativo, la hoja de ruta y la estrategia futura de traducciones.
+- Añadida documentación separada para una futura política de detección de dispositivos y orientación.
 - Registrada esta etapa documental en el changelog.
 
 ## PR #1 — Implementación inicial
