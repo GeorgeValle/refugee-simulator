@@ -56,6 +56,9 @@
     "body": "Este juego está diseñado para verse con el celular en posición horizontal.",
     "paused": "La historia y el contador están pausados mientras girás el dispositivo."
   },
+  "storage": {
+    "memoryOnly": "No pudimos guardar en este navegador. Podés seguir jugando en esta pestaña, pero los cambios se perderán al recargarla o cerrarla."
+  },
   "profile": {
     "eyebrow": "Tu historia comienza acá",
     "title": "Creá tu personaje",

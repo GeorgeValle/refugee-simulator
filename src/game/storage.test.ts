@@ -1,18 +1,30 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createSession, DEFAULT_AUDIO_PREFERENCES, STORY_STEP } from "@/game/model";
-import { preferencesRepository, saveRepository } from "@/game/storage";
+import {
+  createPreferencesRepository,
+  createSaveRepository,
+  PERSISTENCE_RESULT,
+} from "@/game/storage";
+import { createStorySession, createStorySessions } from "@/test/storyFixtures";
 
 describe("save repository", () => {
-  beforeEach(() => localStorage.clear());
+  let repository: ReturnType<typeof createSaveRepository>;
+  let preferences: ReturnType<typeof createPreferencesRepository>;
+
+  beforeEach(() => {
+    localStorage.clear();
+    repository = createSaveRepository();
+    preferences = createPreferencesRepository();
+  });
   afterEach(() => vi.restoreAllMocks());
 
   it("keeps three independent local slots", () => {
-    const first = { ...createSession(1, 100), step: STORY_STEP.APARTMENT, updatedAt: 200 };
-    const third = { ...createSession(3, 300), step: STORY_STEP.VILLAGE, updatedAt: 400 };
-    saveRepository.save(first);
-    saveRepository.save(third);
+    const first = createStorySession(STORY_STEP.APARTMENT, 1);
+    const third = createStorySession(STORY_STEP.VILLAGE, 3);
+    expect(repository.save(first)).toBe(PERSISTENCE_RESULT.PERSISTENT);
+    expect(repository.save(third)).toBe(PERSISTENCE_RESULT.PERSISTENT);
 
-    const slots = saveRepository.list();
+    const slots = repository.list();
     expect(slots).toHaveLength(3);
     expect(slots[0]?.session?.step).toBe(STORY_STEP.APARTMENT);
     expect(slots[1]?.session).toBeNull();
@@ -21,44 +33,79 @@ describe("save repository", () => {
 
   it("ignores corrupt JSON and invalid sessions", () => {
     localStorage.setItem("refugee-simulator:saves:v1", "{broken");
-    expect(saveRepository.list().every((slot) => slot.session === null)).toBe(true);
+    expect(repository.list().every((slot) => slot.session === null)).toBe(true);
 
     localStorage.setItem(
       "refugee-simulator:saves:v1",
       JSON.stringify([{ schemaVersion: 999, slotId: 1 }, createSession(2, 500)]),
     );
-    expect(saveRepository.load(1)).toBeNull();
-    expect(saveRepository.load(2)?.slotId).toBe(2);
+    repository = createSaveRepository();
+    expect(repository.load(1)).toBeNull();
+    expect(repository.load(2)?.slotId).toBe(2);
   });
 
   it("deletes only the requested slot", () => {
-    saveRepository.save(createSession(1, 100));
-    saveRepository.save(createSession(2, 200));
-    saveRepository.delete(1);
-    expect(saveRepository.load(1)).toBeNull();
-    expect(saveRepository.load(2)).not.toBeNull();
+    repository.save(createSession(1, 100));
+    repository.save(createSession(2, 200));
+    expect(repository.delete(1)).toBe(PERSISTENCE_RESULT.PERSISTENT);
+    expect(repository.load(1)).toBeNull();
+    expect(repository.load(2)).not.toBeNull();
   });
 
-  it("round-trips a stable save from every story chapter", () => {
-    for (const [index, step] of Object.values(STORY_STEP).entries()) {
-      const session = {
-        ...createSession(1, 1_000 + index),
-        step,
-        updatedAt: 2_000 + index,
-      };
-      saveRepository.save(session);
-      expect(saveRepository.load(1)?.step).toBe(step);
+  it("round-trips a stable save built by the reducer from every story chapter", () => {
+    for (const session of createStorySessions()) {
+      expect(repository.save(session)).toBe(PERSISTENCE_RESULT.PERSISTENT);
+      expect(repository.load(1)?.step).toBe(session.step);
     }
   });
 
-  it("keeps repository writes safe when local storage fails", () => {
+  it("keeps saves, overwrites, preferences, and deletes coherent in memory mode", () => {
     const write = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
       throw new DOMException("Quota exceeded", "QuotaExceededError");
     });
+    const apartment = createStorySession(STORY_STEP.APARTMENT);
+    const television = createStorySession(STORY_STEP.TELEVISION);
 
-    expect(() => saveRepository.save(createSession(1, 100))).not.toThrow();
-    expect(() => saveRepository.delete(1)).not.toThrow();
-    expect(() => preferencesRepository.save(DEFAULT_AUDIO_PREFERENCES)).not.toThrow();
-    expect(write).toHaveBeenCalledTimes(3);
+    expect(repository.save(apartment)).toBe(PERSISTENCE_RESULT.MEMORY);
+    expect(repository.load(1)?.step).toBe(STORY_STEP.APARTMENT);
+    expect(repository.save(television)).toBe(PERSISTENCE_RESULT.MEMORY);
+    expect(repository.load(1)?.step).toBe(STORY_STEP.TELEVISION);
+    expect(preferences.save({ ...DEFAULT_AUDIO_PREFERENCES, muted: true })).toBe(
+      PERSISTENCE_RESULT.MEMORY,
+    );
+    expect(preferences.load().muted).toBe(true);
+    expect(repository.delete(1)).toBe(PERSISTENCE_RESULT.MEMORY);
+    expect(repository.load(1)).toBeNull();
+    expect(write).toHaveBeenCalledTimes(4);
+  });
+
+  it("returns to persistent mode after a later write succeeds", () => {
+    const nativeSetItem = Storage.prototype.setItem;
+    let unavailable = true;
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(function setItem(
+      this: Storage,
+      key,
+      value,
+    ) {
+      if (unavailable) throw new DOMException("Quota exceeded", "QuotaExceededError");
+      nativeSetItem.call(this, key, value);
+    });
+
+    expect(repository.save(createStorySession(STORY_STEP.APARTMENT))).toBe(
+      PERSISTENCE_RESULT.MEMORY,
+    );
+    unavailable = false;
+    expect(repository.save(createStorySession(STORY_STEP.TELEVISION))).toBe(
+      PERSISTENCE_RESULT.PERSISTENT,
+    );
+    expect(createSaveRepository().load(1)?.step).toBe(STORY_STEP.TELEVISION);
+  });
+
+  it("rejects invalid mutations without replacing its snapshot", () => {
+    const apartment = createStorySession(STORY_STEP.APARTMENT);
+    expect(repository.save(apartment)).toBe(PERSISTENCE_RESULT.PERSISTENT);
+
+    expect(repository.save({ ...apartment, profile: null })).toBe(PERSISTENCE_RESULT.INVALID);
+    expect(repository.load(1)).toEqual(apartment);
   });
 });

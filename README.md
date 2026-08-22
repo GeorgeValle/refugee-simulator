@@ -170,6 +170,9 @@ Las claves usadas son:
 
 Los textos escritos por la persona jugadora permanecen exclusivamente en su navegador. No hay
 peticiones de red en el juego de producción. Borrar los datos del sitio elimina las partidas.
+Si el navegador rechaza una escritura, la partida y las preferencias continúan disponibles en la
+memoria de la pestaña y aparece un aviso accesible. Esos cambios temporales se pierden al recargar o
+cerrar la pestaña; una escritura posterior exitosa vuelve automáticamente al modo persistente.
 
 El plazo del contador se guarda como marca temporal absoluta. Al entrar en modo vertical se
 convierte en milisegundos restantes; al regresar a horizontal se reconstruye el plazo. Los reducers

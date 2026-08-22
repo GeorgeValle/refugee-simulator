@@ -19,7 +19,12 @@ import {
   type StoryStep,
 } from "@/game/model";
 import { GAME_EVENT, type GameEvent, gameReducer } from "@/game/reducer";
-import { preferencesRepository, saveRepository } from "@/game/storage";
+import {
+  PERSISTENCE_RESULT,
+  type PersistenceResult,
+  preferencesRepository,
+  saveRepository,
+} from "@/game/storage";
 import { usePortraitPhone } from "@/hooks/usePortraitPhone";
 import { useSystemReducedMotion } from "@/hooks/useSystemReducedMotion";
 import { EndingScreen } from "@/screens/EndingScreen";
@@ -71,6 +76,12 @@ export default function App() {
   );
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
+  const [savePersistence, setSavePersistence] = useState<PersistenceResult>(
+    PERSISTENCE_RESULT.PERSISTENT,
+  );
+  const [preferencesPersistence, setPreferencesPersistence] = useState<PersistenceResult>(
+    PERSISTENCE_RESULT.PERSISTENT,
+  );
   const portraitPhone = usePortraitPhone();
   const gameplayPaused = portraitPhone || settingsOpen;
   const systemReducedMotion = useSystemReducedMotion();
@@ -82,6 +93,9 @@ export default function App() {
   const timerStep = session?.step ?? null;
   const timerDeadline = session?.timerDeadline ?? null;
   const timerRemainingMs = session?.timerRemainingMs ?? null;
+  const memoryOnly =
+    savePersistence === PERSISTENCE_RESULT.MEMORY ||
+    preferencesPersistence === PERSISTENCE_RESULT.MEMORY;
 
   const refreshSlots = () => setSlots(saveRepository.list());
   const dispatchGame = (event: GameEvent) => {
@@ -95,12 +109,14 @@ export default function App() {
 
   useEffect(() => {
     if (!session) return;
-    saveRepository.save(session);
+    const result = saveRepository.save(session);
+    if (result !== PERSISTENCE_RESULT.INVALID) setSavePersistence(result);
     setSlots(saveRepository.list());
   }, [session]);
 
   useEffect(() => {
-    preferencesRepository.save(preferences);
+    const result = preferencesRepository.save(preferences);
+    if (result !== PERSISTENCE_RESULT.INVALID) setPreferencesPersistence(result);
     gameBridge.emit("preferences", preferences);
   }, [preferences]);
 
@@ -156,12 +172,12 @@ export default function App() {
   const confirmPendingAction = () => {
     if (!confirmAction) return;
     if (confirmAction.kind === "delete") {
-      saveRepository.delete(confirmAction.slotId);
+      setSavePersistence(saveRepository.delete(confirmAction.slotId));
       if (session?.slotId === confirmAction.slotId) setSession(null);
       refreshSlots();
     } else {
       const next = createSession(confirmAction.slotId);
-      saveRepository.save(next);
+      setSavePersistence(saveRepository.save(next));
       setSession(next);
     }
     setConfirmAction(null);
@@ -362,6 +378,11 @@ export default function App() {
           </button>
         </div>
       </header>
+      {warningAccepted && memoryOnly ? (
+        <p className="storage-warning" role="status">
+          {t("storage.memoryOnly")}
+        </p>
+      ) : null}
       <div className={`story-layer story-layer--${session?.step ?? "menu"}`}>{renderStory()}</div>
       <Modal open={!warningAccepted} title={t("warning.title")} dismissible={false}>
         <div className="warning-copy">

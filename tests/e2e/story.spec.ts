@@ -56,6 +56,33 @@ test("mantiene la interfaz si falla el escenario Phaser", async ({ page }) => {
   await expect(page.locator(".game-stage__canvas--fallback")).toBeAttached();
 });
 
+test("continúa en memoria y avisa cuando localStorage rechaza escrituras", async ({ page }) => {
+  await page.addInitScript(() => {
+    const originalSetItem = Storage.prototype.setItem;
+    Storage.prototype.setItem = function setItem(key, value) {
+      if (key === "refugee-simulator:saves:v1" || key === "refugee-simulator:preferences:v1") {
+        throw new DOMException("Quota exceeded", "QuotaExceededError");
+      }
+      originalSetItem.call(this, key, value);
+    };
+  });
+  await page.goto("/");
+  await acceptWarning(page);
+  await expect(page.getByRole("status")).toContainText("No pudimos guardar");
+
+  await page.getByRole("button", { name: "Juego nuevo" }).first().click();
+  await expect(page.getByRole("heading", { name: "Creá tu personaje" })).toBeVisible();
+  await page.getByRole("button", { name: "Simulador de Refugiado" }).click();
+  await expect(page.getByRole("button", { name: "Continuar" })).toBeVisible();
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page.getByRole("heading", { name: "Creá tu personaje" })).toBeVisible();
+
+  await page.reload();
+  await expect(page.getByRole("status")).toContainText("No pudimos guardar");
+  await expect(page.getByRole("button", { name: "Continuar" })).toHaveCount(0);
+  await expect(page.getByText("Ranura vacía")).toHaveCount(3);
+});
+
 test("completa la historia y conserva las decisiones", async ({ page }) => {
   await page.goto("/");
   await acceptWarning(page);

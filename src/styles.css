@@ -105,6 +105,21 @@ a:focus-visible {
   align-items: center;
   gap: 12px;
 }
+.storage-warning {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  z-index: 30;
+  width: min(680px, calc(100% - 32px));
+  margin: 0;
+  padding: 10px 16px;
+  color: var(--paper-ink);
+  text-align: center;
+  background: var(--gold-light);
+  border-radius: 7px;
+  box-shadow: var(--shadow);
+  transform: translateX(-50%);
+}
 .brand-button {
   display: flex;
   align-items: center;
