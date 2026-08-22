@@ -15,7 +15,10 @@
 
 - Mantener el alcance de cada cambio acotado a su objetivo; no mezclar refactors oportunistas.
 - No añadir backend, cuentas, telemetría ni dependencias de red sin una decisión documentada.
-- Todo texto visible nuevo debe pasar por i18next y toda regla narrativa debe permanecer en el reducer.
+- Todo texto visible nuevo debe pasar por i18next. Las transiciones narrativas permanecen en el
+  reducer; las invariantes de dominio se definen en helpers reutilizables del modelo, la interfaz
+  puede anticipar errores y el esquema valida datos externos o persistidos. Estos niveles deben
+  mantenerse alineados mediante pruebas.
 - Las referencias privadas, secretos, builds, caches y configuraciones de la computadora deben quedar fuera del commit según `.gitignore`.
 
 ## Ramas y commits

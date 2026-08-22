@@ -7,24 +7,35 @@ idiomas está en `src/game/locales.ts` y el recurso activo en
 `src/locales/es-AR/translation.json`. Ningún componente ni escena debe incorporar texto visible
 directamente.
 
+La versión actual no ofrece un selector de idioma: `i18n.ts` inicia siempre en `DEFAULT_LOCALE` y
+Ajustes solo informa el idioma activo. Registrar un recurso no lo vuelve seleccionable por sí solo.
+
 ## Añadir un idioma
 
 1. Añadir el código BCP 47 a `SUPPORTED_LOCALES`.
 2. Crear `src/locales/<código>/translation.json` con la misma estructura de claves.
 3. Registrar el recurso en `src/i18n.ts`.
-4. Traducir también validaciones, botones, títulos, subtítulos, estadísticas y textos accesibles.
-5. Ejecutar `pnpm typecheck`, `pnpm test:run` y el recorrido E2E del idioma.
+4. Añadir un selector de idioma en Ajustes y conectarlo con `i18n.changeLanguage`.
+5. Persistir la preferencia elegida, restaurarla antes del primer render y mantener sincronizado
+   `GameSession.locale` al crear o cargar una partida.
+6. Traducir también validaciones, botones, títulos, subtítulos, estadísticas y textos accesibles.
+7. Ejecutar `pnpm typecheck`, `pnpm test:run` y el recorrido E2E del idioma.
 
 La lógica narrativa debe usar valores neutrales como `childhood`, `firstDeparture` y `camp`; nunca
 debe comparar frases traducidas ni depender del orden de palabras.
 
 ## Convenciones
 
-- Mantener namespaces por área (`common`, `menu`, `story`, `forms`, `accessibility`, `audio`).
+- Mantener grupos de claves descriptivos dentro del único namespace i18next actual, `translation`.
+  Entre los grupos existentes están `common`, `menu`, `settings`, `profile`, `family`, `packing`,
+  `story` y `accessibility`; no asumir grupos `forms` o `audio` que aún no existen.
 - Preferir claves estables y descriptivas antes que claves basadas en texto.
 - Usar interpolación para nombres, cantidades y tiempos; no concatenar frases desde React.
 - Mantener género, número, formalidad y longitud adecuados al idioma destino.
 - Traducir siempre `aria-label`, `aria-describedby`, subtítulos y mensajes de error.
+
+Si en el futuro se separan namespaces, habrá que registrar cada recurso adicional en i18next y
+actualizar las llamadas `t(...)` y sus pruebas; no basta con reorganizar las carpetas.
 
 ## Revisión y fallback
 

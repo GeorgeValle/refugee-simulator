@@ -22,9 +22,13 @@ su dispositivo.
 
 ## Architecture
 
-React controla menús, formularios, diálogos, foco, ajustes y papelitos. El reducer tipado es la
-fuente única de verdad narrativa. Phaser es una capa visual y recibe comandos por `GameBridge`; no
-contiene texto narrativo visible. El director de audio procedural es la única fuente de sonido.
+React controla menús, formularios, diálogos, foco, ajustes y papelitos. El reducer tipado controla
+las transiciones narrativas, los eventos y los cambios de estado. Las constantes y helpers de
+dominio en `model.ts` definen reglas reutilizables como elegibilidad y repetibilidad de parentescos;
+React las usa para anticipar errores en el formulario y `schema.ts` las vuelve a validar al cargar o
+guardar datos. Las pruebas cubren esos niveles para evitar divergencias. Phaser es una capa visual
+y recibe comandos por `GameBridge`; no contiene texto narrativo visible. El director de audio
+procedural es la única fuente de sonido.
 
 Las sesiones se validan con Zod, tienen `schemaVersion: 1` y ocupan hasta tres ranuras de
 `localStorage`. Si el navegador bloquea una escritura, el repositorio conserva un snapshot en
