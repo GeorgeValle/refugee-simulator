@@ -45,6 +45,17 @@ async function reachTimedLoss(page: Page) {
   await expect(page.getByRole("heading", { name: "Elegí dos papelitos" })).toBeVisible();
 }
 
+test("mantiene la interfaz si falla el escenario Phaser", async ({ page }) => {
+  await page.route("**/assets/PhaserStage-*.js", (route) => route.abort());
+  await page.goto("/");
+  await acceptWarning(page);
+
+  await expect(page.getByRole("button", { name: "Juego nuevo" }).first()).toBeVisible();
+  await page.getByRole("button", { name: "Juego nuevo" }).first().click();
+  await expect(page.getByRole("heading", { name: "Creá tu personaje" })).toBeVisible();
+  await expect(page.locator(".game-stage__canvas--fallback")).toBeAttached();
+});
+
 test("completa la historia y conserva las decisiones", async ({ page }) => {
   await page.goto("/");
   await acceptWarning(page);
@@ -144,10 +155,9 @@ test("pausa el contador mientras Ajustes está abierto", async ({ page }) => {
   expect(resumed.losses).toHaveLength(2);
 });
 
-test("reanuda una sola vez después de cerrar Ajustes y volver a horizontal", async (
-  { page },
-  testInfo,
-) => {
+test("reanuda una sola vez después de cerrar Ajustes y volver a horizontal", async ({
+  page,
+}, testInfo) => {
   test.skip(testInfo.project.name !== "phone-landscape", "Solo corresponde al proyecto móvil");
   await page.goto("/");
   await acceptWarning(page);

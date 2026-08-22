@@ -66,6 +66,11 @@ a:focus-visible {
   inset: 0;
   z-index: -3;
 }
+.game-stage__canvas--fallback {
+  background:
+    radial-gradient(circle at 72% 28%, rgba(114, 197, 193, 0.12), transparent 24%),
+    linear-gradient(160deg, var(--night-soft), var(--night));
+}
 .game-stage__canvas canvas {
   display: block;
   width: 100% !important;

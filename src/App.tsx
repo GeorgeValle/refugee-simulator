@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DialogueBox } from "@/components/DialogueBox";
+import { GameStageBoundary } from "@/components/GameStageBoundary";
 import { Modal } from "@/components/Modal";
 import { OrientationGuard } from "@/components/OrientationGuard";
 import { SettingsPanel } from "@/components/SettingsPanel";
@@ -331,9 +332,11 @@ export default function App() {
 
   return (
     <div className="app">
-      <Suspense fallback={<div className="game-stage__canvas" aria-hidden="true" />}>
-        <PhaserStage />
-      </Suspense>
+      <GameStageBoundary>
+        <Suspense fallback={<div className="game-stage__canvas" aria-hidden="true" />}>
+          <PhaserStage />
+        </Suspense>
+      </GameStageBoundary>
       <div className="game-stage__shade" aria-hidden="true" />
       <header className="app-bar">
         <button
