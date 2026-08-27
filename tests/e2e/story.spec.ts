@@ -123,6 +123,7 @@ test("completa la historia y conserva las decisiones", async ({ page }) => {
   await page.getByRole("button", { name: "Continuar" }).click();
 
   await expect(page.getByRole("heading", { name: "Lo que quedó atrás" }).first()).toBeVisible();
+  await expect(page.getByText(/Siembra sin cosecha/)).toBeVisible();
   await expect(page.getByText("117,8 millones")).toBeVisible();
   await expect(page.getByText(/No sabés qué ocurrió después/).first()).toBeVisible();
   await expectNoSeriousAxeViolations(page);
@@ -131,6 +132,19 @@ test("completa la historia y conserva las decisiones", async ({ page }) => {
   await page.getByRole("button", { name: "Continuar partida" }).click();
   await expect(page.getByRole("heading", { name: "Lo que quedó atrás" }).first()).toBeVisible();
   await expect(page.locator(".loss-summary li")).toHaveCount(6);
+
+  await page.getByRole("button", { name: "Simulador de Refugiado" }).click();
+  await page.getByRole("button", { name: "Ver desbloqueables" }).click();
+  await expect(page.getByRole("heading", { name: "Desbloqueables" })).toBeFocused();
+  await expect(page.getByRole("heading", { name: "Juventud fuerte" }).locator("..")).toContainText(
+    "Desbloqueado",
+  );
+
+  await page.reload();
+  await page.getByRole("button", { name: "Ver desbloqueables" }).click();
+  await expect(page.getByRole("heading", { name: "Juventud fuerte" }).locator("..")).toContainText(
+    "Desbloqueado",
+  );
 });
 
 test("pausa el contador al pasar un teléfono a vertical", async ({ page }, testInfo) => {
