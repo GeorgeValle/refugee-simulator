@@ -2,6 +2,7 @@ import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { PaperSlip } from "@/components/PaperSlip";
 import { type GameSession, type MemorySlip, SLIP_KIND, SLIP_STATUS } from "@/game/model";
+import { analyzeArrival } from "@/game/unlockables";
 
 function describeLoss(slip: MemorySlip, t: TFunction): string {
   if (slip.kind === SLIP_KIND.FAMILY && slip.relationship) {
@@ -23,6 +24,7 @@ export function EndingScreen({ session, showCaptions, onMenu }: EndingScreenProp
   const { t } = useTranslation();
   const lost = session.slips.filter((slip) => slip.status === SLIP_STATUS.LOST);
   const remaining = session.slips.filter((slip) => slip.status === SLIP_STATUS.ACTIVE);
+  const arrival = analyzeArrival(session);
   const facts = [
     [t("ending.factDisplacedValue"), t("ending.factDisplacedLabel")],
     [t("ending.factChildrenValue"), t("ending.factChildrenLabel")],
@@ -38,6 +40,15 @@ export function EndingScreen({ session, showCaptions, onMenu }: EndingScreenProp
           {t("ending.title")}
         </h1>
         <p>{t("story.reflection")}</p>
+        {arrival ? (
+          <section className="ending-personalized" aria-labelledby="personalized-ending-title">
+            <h2 className="u-visually-hidden" id="personalized-ending-title">
+              {t("ending.personalized.title")}
+            </h2>
+            {arrival.allFamilyArrived ? <p>{t("ending.personalized.allFamily")}</p> : null}
+            <p>{t(`ending.personalized.age.${arrival.ageBand}`)}</p>
+          </section>
+        ) : null}
         {showCaptions ? (
           <p className="sound-caption sound-caption--center">{t("accessibility.softCrying")}</p>
         ) : null}
