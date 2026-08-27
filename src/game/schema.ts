@@ -16,6 +16,7 @@ import {
   SLIP_STATUS,
   STORY_STEP,
 } from "@/game/model";
+import { UNLOCKABLE_ID, UNLOCKABLE_IDS, type UnlockableProgress } from "@/game/unlockables";
 
 const characterProfileSchema = z.object({
   gender: z.enum(GENDER),
@@ -287,6 +288,28 @@ export const audioPreferencesSchema: z.ZodType<AudioPreferences> = z.object({
   captions: z.boolean(),
   reducedMotion: z.boolean(),
 });
+
+export const unlockableProgressSchema: z.ZodType<UnlockableProgress> = z
+  .object({
+    schemaVersion: z.literal(1),
+    entries: z
+      .array(
+        z.object({
+          id: z.enum(UNLOCKABLE_ID),
+          unlockedAt: z.number().int().nonnegative(),
+        }),
+      )
+      .max(UNLOCKABLE_IDS.length),
+  })
+  .superRefine((progress, context) => {
+    if (new Set(progress.entries.map(({ id }) => id)).size !== progress.entries.length) {
+      context.addIssue({
+        code: "custom",
+        path: ["entries"],
+        message: "unlockable IDs must be unique",
+      });
+    }
+  });
 
 export const familyInputSchema = z.object({
   family: z

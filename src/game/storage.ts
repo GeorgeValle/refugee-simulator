@@ -6,10 +6,17 @@ import {
   type SaveSlot,
   type SaveSlotId,
 } from "@/game/model";
-import { audioPreferencesSchema, gameSessionSchema } from "@/game/schema";
+import { audioPreferencesSchema, gameSessionSchema, unlockableProgressSchema } from "@/game/schema";
+import {
+  EMPTY_UNLOCKABLE_PROGRESS,
+  type UnlockableEntry,
+  type UnlockableId,
+  type UnlockableProgress,
+} from "@/game/unlockables";
 
 const SAVES_KEY = "refugee-simulator:saves:v1";
 const PREFERENCES_KEY = "refugee-simulator:preferences:v1";
+const UNLOCKABLES_KEY = "refugee-simulator:unlockables:v1";
 
 export const PERSISTENCE_RESULT = {
   PERSISTENT: "persistent",
@@ -155,5 +162,92 @@ export function createPreferencesRepository(provider: StorageProvider = () => lo
   };
 }
 
+interface UnlockablesReadResult {
+  progress: UnlockableProgress;
+  available: boolean;
+}
+
+function readUnlockables(provider: StorageProvider): UnlockablesReadResult {
+  let raw: string | null;
+  try {
+    raw = provider().getItem(UNLOCKABLES_KEY);
+  } catch {
+    return { progress: EMPTY_UNLOCKABLE_PROGRESS, available: false };
+  }
+  if (!raw) return { progress: EMPTY_UNLOCKABLE_PROGRESS, available: true };
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    return { progress: EMPTY_UNLOCKABLE_PROGRESS, available: true };
+  }
+  const result = unlockableProgressSchema.safeParse(parsed);
+  return {
+    progress: result.success ? result.data : EMPTY_UNLOCKABLE_PROGRESS,
+    available: true,
+  };
+}
+
+function mergeUnlockableEntries(
+  ...entryGroups: ReadonlyArray<readonly UnlockableEntry[]>
+): UnlockableEntry[] {
+  const byId = new Map<UnlockableId, number>();
+  for (const entries of entryGroups) {
+    for (const entry of entries) {
+      const current = byId.get(entry.id);
+      byId.set(
+        entry.id,
+        current === undefined ? entry.unlockedAt : Math.min(current, entry.unlockedAt),
+      );
+    }
+  }
+  return [...byId]
+    .map(([id, unlockedAt]) => ({ id, unlockedAt }))
+    .sort((left, right) => left.id.localeCompare(right.id));
+}
+
+export function createUnlockablesRepository(provider: StorageProvider = () => localStorage) {
+  let snapshot: UnlockableProgress = EMPTY_UNLOCKABLE_PROGRESS;
+  let pendingEntries: UnlockableEntry[] = [];
+
+  return {
+    list(): UnlockableProgress {
+      const persisted = readUnlockables(provider);
+      snapshot = {
+        schemaVersion: 1,
+        entries: mergeUnlockableEntries(
+          persisted.available ? persisted.progress.entries : snapshot.entries,
+          pendingEntries,
+        ),
+      };
+      return snapshot;
+    },
+    record(entries: readonly UnlockableEntry[]): PersistenceResult {
+      if (entries.length === 0) return PERSISTENCE_RESULT.PERSISTENT;
+      const candidates = unlockableProgressSchema.safeParse({ schemaVersion: 1, entries });
+      if (!candidates.success) return PERSISTENCE_RESULT.INVALID;
+
+      pendingEntries = mergeUnlockableEntries(pendingEntries, candidates.data.entries);
+      const persisted = readUnlockables(provider);
+      snapshot = {
+        schemaVersion: 1,
+        entries: mergeUnlockableEntries(
+          persisted.available ? persisted.progress.entries : snapshot.entries,
+          pendingEntries,
+        ),
+      };
+      if (
+        !persisted.available ||
+        !writeStorage(provider, UNLOCKABLES_KEY, JSON.stringify(snapshot))
+      ) {
+        return PERSISTENCE_RESULT.MEMORY;
+      }
+      pendingEntries = [];
+      return PERSISTENCE_RESULT.PERSISTENT;
+    },
+  };
+}
+
 export const saveRepository = createSaveRepository();
 export const preferencesRepository = createPreferencesRepository();
+export const unlockablesRepository = createUnlockablesRepository();
