@@ -26,6 +26,17 @@ ni telemetría.
 - Navegación por teclado, foco visible, objetivos táctiles de 44 px y HTML semántico.
 - Datos educativos estáticos de ACNUR para conservar el funcionamiento sin red.
 
+## Documentación
+
+- [Requisitos del proyecto](project-requirements.md)
+- [Guía para agentes y colaboradores](AGENTS.md)
+- [Diseño narrativo](docs/NARRATIVE_DESIGN.md)
+- [Estrategia de traducciones](docs/TRANSLATIONS.md)
+- [Implementaciones futuras](docs/FUTURE-IMPLEMENTATIONS.md)
+- [Hoja de ruta](docs/ROADMAP.md)
+- [Changelog](CHANGELOG.md)
+- [Arte y procedencia](docs/ART_ASSETS.md)
+
 ## Tecnologías
 
 | Área | Tecnología |
@@ -199,9 +210,11 @@ El bloqueo de orientación usa la consulta:
 (orientation: portrait) and (max-width: 767px)
 ```
 
-Por eso solo obliga a girar teléfonos; tabletas y escritorios continúan de forma responsiva. Una web
-normal no puede garantizar el bloqueo físico del dispositivo, por lo que se aplica un bloqueo visual,
-de interacción, audio y temporizador.
+Por eso se aplica a cualquier viewport vertical de hasta 767 px, incluidos teléfonos, tabletas
+pequeñas y ventanas de escritorio estrechas. La consulta no identifica de forma fiable el tipo de
+dispositivo. Una web normal no puede garantizar el bloqueo físico del dispositivo, por lo que se
+aplica un bloqueo visual, de interacción, audio y temporizador. La posible detección más precisa de
+dispositivos queda documentada en [Implementaciones futuras](docs/FUTURE-IMPLEMENTATIONS.md).
 
 En orientación horizontal, la aplicación se centra dentro de un marco 16:9 y usa el fondo nocturno
 como letterboxing cuando la relación del viewport no coincide. El aviso de rotación permanece fijo
