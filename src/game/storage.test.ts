@@ -3,8 +3,10 @@ import { createSession, DEFAULT_AUDIO_PREFERENCES, STORY_STEP } from "@/game/mod
 import {
   createPreferencesRepository,
   createSaveRepository,
+  createUnlockablesRepository,
   PERSISTENCE_RESULT,
 } from "@/game/storage";
+import { UNLOCKABLE_ID } from "@/game/unlockables";
 import { createStorySession, createStorySessions } from "@/test/storyFixtures";
 
 describe("save repository", () => {
@@ -187,5 +189,88 @@ describe("save repository", () => {
 
     expect(repository.save({ ...apartment, profile: null })).toBe(PERSISTENCE_RESULT.INVALID);
     expect(repository.load(1)).toEqual(apartment);
+  });
+});
+
+describe("unlockables repository", () => {
+  beforeEach(() => localStorage.clear());
+  afterEach(() => vi.restoreAllMocks());
+
+  it("persists progress independently from save slot deletion", () => {
+    const unlockables = createUnlockablesRepository();
+    const saves = createSaveRepository();
+    saves.save(createStorySession(STORY_STEP.ENDING));
+    expect(unlockables.record([{ id: UNLOCKABLE_ID.YOUTH_ARRIVAL, unlockedAt: 2_500 }])).toBe(
+      PERSISTENCE_RESULT.PERSISTENT,
+    );
+
+    saves.delete(1);
+
+    expect(createUnlockablesRepository().list().entries).toContainEqual({
+      id: UNLOCKABLE_ID.YOUTH_ARRIVAL,
+      unlockedAt: 2_500,
+    });
+  });
+
+  it("merges unlocks recorded by separate tabs and keeps the earliest timestamp", () => {
+    const firstTab = createUnlockablesRepository();
+    const secondTab = createUnlockablesRepository();
+    firstTab.list();
+    secondTab.list();
+
+    firstTab.record([{ id: UNLOCKABLE_ID.DREAM_REMAINS, unlockedAt: 4_000 }]);
+    secondTab.record([
+      { id: UNLOCKABLE_ID.PROFESSION_REMAINS, unlockedAt: 4_100 },
+      { id: UNLOCKABLE_ID.DREAM_REMAINS, unlockedAt: 3_900 },
+    ]);
+
+    expect(createUnlockablesRepository().list().entries).toEqual([
+      { id: UNLOCKABLE_ID.DREAM_REMAINS, unlockedAt: 3_900 },
+      { id: UNLOCKABLE_ID.PROFESSION_REMAINS, unlockedAt: 4_100 },
+    ]);
+  });
+
+  it("ignores corrupt data and replaces it with the next valid record", () => {
+    localStorage.setItem("refugee-simulator:unlockables:v1", "{broken");
+    const repository = createUnlockablesRepository();
+    expect(repository.list().entries).toEqual([]);
+
+    expect(repository.record([{ id: UNLOCKABLE_ID.CHILDHOOD_ARRIVAL, unlockedAt: 1_000 }])).toBe(
+      PERSISTENCE_RESULT.PERSISTENT,
+    );
+    expect(createUnlockablesRepository().list().entries).toHaveLength(1);
+  });
+
+  it("keeps unlocks in memory and flushes them when storage recovers", () => {
+    const nativeSetItem = Storage.prototype.setItem;
+    let unavailable = true;
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(function setItem(
+      this: Storage,
+      key,
+      value,
+    ) {
+      if (unavailable) throw new DOMException("Quota exceeded", "QuotaExceededError");
+      nativeSetItem.call(this, key, value);
+    });
+    const repository = createUnlockablesRepository();
+    const first = { id: UNLOCKABLE_ID.ADOLESCENCE_ARRIVAL, unlockedAt: 1_000 } as const;
+    const second = { id: UNLOCKABLE_ID.DREAM_REMAINS, unlockedAt: 2_000 } as const;
+
+    expect(repository.record([first])).toBe(PERSISTENCE_RESULT.MEMORY);
+    expect(repository.list().entries).toContainEqual(first);
+    unavailable = false;
+    expect(repository.record([second])).toBe(PERSISTENCE_RESULT.PERSISTENT);
+    expect(createUnlockablesRepository().list().entries).toEqual([first, second]);
+  });
+
+  it("rejects duplicate IDs without replacing persisted progress", () => {
+    const repository = createUnlockablesRepository();
+    const original = { id: UNLOCKABLE_ID.OLD_AGE_ARRIVAL, unlockedAt: 1_000 } as const;
+    repository.record([original]);
+
+    expect(repository.record([original, { ...original, unlockedAt: 2_000 }])).toBe(
+      PERSISTENCE_RESULT.INVALID,
+    );
+    expect(repository.list().entries).toEqual([original]);
   });
 });

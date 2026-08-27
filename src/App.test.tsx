@@ -2,9 +2,10 @@ import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "@/App";
-import { createSession } from "@/game/model";
+import { createSession, STORY_STEP } from "@/game/model";
 import { createSaveRepository, PERSISTENCE_RESULT, preferencesRepository } from "@/game/storage";
 import "@/i18n";
+import { createStorySession } from "@/test/storyFixtures";
 
 vi.mock("@/game/PhaserStage", () => ({ PhaserStage: () => null }));
 
@@ -113,5 +114,39 @@ describe("stale save slot protection", () => {
     expect(screen.getByRole("dialog", { name: "¿Reemplazar esta partida?" })).toBeVisible();
     expect(screen.queryByRole("heading", { name: "Creá tu personaje" })).not.toBeInTheDocument();
     expect(otherTab.load(1)?.id).toBe(externalSession.id);
+  });
+});
+
+describe("unlockable journey navigation", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    sessionStorage.setItem("refugee-simulator:warning-accepted", "true");
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
+  it("backfills an ending save and keeps its card after deleting the slot", async () => {
+    const user = userEvent.setup();
+    const repository = createSaveRepository();
+    repository.save(createStorySession(STORY_STEP.ENDING));
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Ver desbloqueables" }));
+    const title = screen.getByRole("heading", { name: "Desbloqueables", level: 1 });
+    await waitFor(() => expect(title).toHaveFocus());
+    const youthCard = screen.getByRole("heading", { name: "Juventud fuerte" }).closest("article");
+    expect(youthCard).toHaveTextContent("Desbloqueado");
+
+    await user.click(screen.getByRole("button", { name: "Volver a partidas" }));
+    await user.click(screen.getByRole("button", { name: "Eliminar" }));
+    await user.click(screen.getByRole("button", { name: "Confirmar" }));
+    await user.click(screen.getByRole("button", { name: "Ver desbloqueables" }));
+
+    expect(
+      screen.getByRole("heading", { name: "Juventud fuerte" }).closest("article"),
+    ).toHaveTextContent("Desbloqueado");
   });
 });

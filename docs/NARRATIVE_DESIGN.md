@@ -16,6 +16,25 @@ empatía y reflexión, no simular una experiencia de sufrimiento como entretenim
 6. **Aldea forestal:** un grupo armado ficticio toma dos papelitos activos al azar.
 7. **Campamento:** resumen personalizado, separación y reflexión final.
 
+## Reflexión final personalizada
+
+La reflexión general sobre el desplazamiento siempre permanece. Después se muestra un párrafo
+según la franja de edad elegida, centrado en cómo el desarraigo puede afectar esa etapa vital. Si
+los cuatro papelitos familiares siguen activos, se añade además un mensaje de alivio porque toda
+la familia llegó reunida. Ambos textos se muestran cuando coinciden las dos condiciones.
+
+## Recorridos desbloqueables
+
+La sección accesible desde el menú presenta nueve cartas: llegar con toda la familia, llegar solo
+con la pareja, llegar en cada una de las cinco franjas de edad, conservar el sueño y conservar la
+profesión. Las cartas bloqueadas permanecen en gris, pero siempre muestran su título y condición;
+las desbloqueadas recuperan el color y anuncian su estado de manera accesible.
+
+Estos recorridos no son logros, premios ni una puntuación del sufrimiento. Representan distintas
+perspectivas de una misma historia y buscan fomentar la reflexión. Se desbloquean al llegar al
+campamento, permanecen aunque se borren partidas y no almacenan nombres ni respuestas escritas por
+la persona jugadora.
+
 ## Reglas de representación
 
 - No usar países, banderas, grupos armados, vehículos o marcas reales.

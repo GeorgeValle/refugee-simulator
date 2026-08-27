@@ -17,6 +17,20 @@ test("el menú y el aviso de contenido no tienen infracciones graves", async ({ 
   ).toEqual([]);
 });
 
+test("la colección de desbloqueables es navegable y accesible", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Entiendo y quiero continuar" }).click();
+  await page.getByRole("button", { name: "Ver desbloqueables" }).click();
+  await expect(page.getByRole("heading", { name: "Desbloqueables" })).toBeFocused();
+  await expect(page.getByRole("article")).toHaveCount(9);
+  await expect(page.getByText("Bloqueado")).toHaveCount(9);
+
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(
+    results.violations.filter(({ impact }) => impact === "critical" || impact === "serious"),
+  ).toEqual([]);
+});
+
 test("respeta la preferencia del sistema de reducir movimiento", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");

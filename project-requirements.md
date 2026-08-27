@@ -35,6 +35,12 @@ Las sesiones se validan con Zod, tienen `schemaVersion: 1` y ocupan hasta tres r
 memoria, muestra un aviso accesible y continúa; esos cambios son volátiles hasta recuperar la
 persistencia.
 
+Los recorridos desbloqueables se guardan en un repositorio global, versionado e independiente de
+las ranuras. Su progreso es monotónico, combina cambios entre pestañas y conserva únicamente el ID
+y la primera fecha de desbloqueo. Borrar o sobrescribir una partida no elimina ese progreso. Las
+partidas existentes que ya llegaron al campamento se evalúan al cargarse para recuperar sus
+recorridos.
+
 ## Narrative requirements
 
 1. Aviso de contenido, menú y tres ranuras.
@@ -43,10 +49,15 @@ persistencia.
 4. Selección y nombre de cuatro familiares, con restricciones por edad y unicidad.
 5. Doce papelitos: familia, objetos, profesión, habilidad, ropa favorita y sueño.
 6. Dos pérdidas manuales, dos pérdidas contrarreloj y dos pérdidas aleatorias.
-7. Llegada al campamento y resumen de pérdidas.
+7. Llegada al campamento, resumen de pérdidas y reflexiones personalizadas por edad y familia.
+8. Evaluación de nueve recorridos desbloqueables relacionados con la familia, la edad y los
+   aspectos de identidad o futuro que permanecieron.
 
 Una separación familiar siempre se describe como destino desconocido, nunca como fallecimiento.
 Los sorteos son deterministas en pruebas y no se repiten al recargar una decisión ya confirmada.
+Los desbloqueables no puntúan ni comparan el sufrimiento: funcionan como perspectivas narrativas
+que invitan a recorrer distintas variantes de la historia. Sus cartas bloqueadas muestran la
+condición necesaria sin ocultar información a la persona jugadora.
 
 ## Accessibility and mobile
 

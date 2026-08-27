@@ -24,7 +24,9 @@ import {
   type PersistenceResult,
   preferencesRepository,
   saveRepository,
+  unlockablesRepository,
 } from "@/game/storage";
+import { type UnlockableProgress, unlockableEntriesFromSessions } from "@/game/unlockables";
 import { usePortraitPhone } from "@/hooks/usePortraitPhone";
 import { useSystemReducedMotion } from "@/hooks/useSystemReducedMotion";
 import { EndingScreen } from "@/screens/EndingScreen";
@@ -33,11 +35,19 @@ import { LossScreen } from "@/screens/LossScreen";
 import { MenuScreen } from "@/screens/MenuScreen";
 import { PackingScreen } from "@/screens/PackingScreen";
 import { ProfileScreen } from "@/screens/ProfileScreen";
+import { UnlockablesScreen } from "@/screens/UnlockablesScreen";
 
 interface ConfirmAction {
   kind: "overwrite" | "delete";
   slotId: SaveSlotId;
 }
+
+const MENU_VIEW = {
+  SAVES: "saves",
+  UNLOCKABLES: "unlockables",
+} as const;
+
+type MenuView = (typeof MENU_VIEW)[keyof typeof MENU_VIEW];
 
 const EMPTY_FAMILY: FamilyMember[] = [];
 const WARNING_ACCEPTED_KEY = "refugee-simulator:warning-accepted";
@@ -71,6 +81,10 @@ export default function App() {
   const [warningAccepted, setWarningAccepted] = useState(loadWarningAccepted);
   const [slots, setSlots] = useState<SaveSlot[]>(() => saveRepository.list());
   const [session, setSession] = useState<GameSession | null>(null);
+  const [menuView, setMenuView] = useState<MenuView>(MENU_VIEW.SAVES);
+  const [unlockableProgress, setUnlockableProgress] = useState<UnlockableProgress>(() =>
+    unlockablesRepository.list(),
+  );
   const [preferences, setPreferences] = useState<AudioPreferences>(() =>
     preferencesRepository.load(),
   );
@@ -82,14 +96,18 @@ export default function App() {
   const [preferencesPersistence, setPreferencesPersistence] = useState<PersistenceResult>(
     PERSISTENCE_RESULT.PERSISTENT,
   );
+  const [unlockablesPersistence, setUnlockablesPersistence] = useState<PersistenceResult>(
+    PERSISTENCE_RESULT.PERSISTENT,
+  );
   const portraitPhone = usePortraitPhone();
   const gameplayPaused = portraitPhone || settingsOpen;
   const systemReducedMotion = useSystemReducedMotion();
   const reducedMotion = preferences.reducedMotion || systemReducedMotion;
   const audioUnlockedRef = useRef(false);
   const storyLayerRef = useRef<HTMLDivElement>(null);
-  const lastFocusedStepRef = useRef<StoryStep | "menu" | null>(null);
+  const lastFocusedStepRef = useRef<StoryStep | MenuView | null>(null);
   const visualStep = session?.step ?? "menu";
+  const focusRoute = session?.step ?? menuView;
   const visualProfile = session?.profile ?? null;
   const visualFamily = session?.family ?? EMPTY_FAMILY;
   const timerStep = session?.step ?? null;
@@ -97,7 +115,8 @@ export default function App() {
   const timerRemainingMs = session?.timerRemainingMs ?? null;
   const memoryOnly =
     savePersistence === PERSISTENCE_RESULT.MEMORY ||
-    preferencesPersistence === PERSISTENCE_RESULT.MEMORY;
+    preferencesPersistence === PERSISTENCE_RESULT.MEMORY ||
+    unlockablesPersistence === PERSISTENCE_RESULT.MEMORY;
 
   const refreshSlots = () => setSlots(saveRepository.list());
   const dispatchGame = (event: GameEvent) => {
@@ -123,6 +142,16 @@ export default function App() {
   }, [preferences]);
 
   useEffect(() => {
+    const entries = unlockableEntriesFromSessions(
+      slots.flatMap(({ session: saved }) => (saved ? [saved] : [])),
+    );
+    if (entries.length === 0) return;
+    const result = unlockablesRepository.record(entries);
+    if (result !== PERSISTENCE_RESULT.INVALID) setUnlockablesPersistence(result);
+    setUnlockableProgress(unlockablesRepository.list());
+  }, [slots]);
+
+  useEffect(() => {
     gameBridge.emit("visual", {
       step: visualStep === "menu" ? "menu" : storyScene(visualStep),
       profile: visualProfile,
@@ -133,12 +162,12 @@ export default function App() {
 
   useEffect(() => {
     if (!warningAccepted || settingsOpen || confirmAction || portraitPhone) return;
-    if (lastFocusedStepRef.current === visualStep) return;
+    if (lastFocusedStepRef.current === focusRoute) return;
     const target = storyLayerRef.current?.querySelector<HTMLElement>("[data-story-focus]");
     if (!target) return;
     target.focus({ preventScroll: true });
-    lastFocusedStepRef.current = visualStep;
-  }, [confirmAction, portraitPhone, settingsOpen, visualStep, warningAccepted]);
+    lastFocusedStepRef.current = focusRoute;
+  }, [confirmAction, focusRoute, portraitPhone, settingsOpen, warningAccepted]);
 
   useEffect(() => {
     gameBridge.emit("pause", gameplayPaused);
@@ -177,6 +206,7 @@ export default function App() {
       setConfirmAction({ kind: "overwrite", slotId });
       return;
     }
+    setMenuView(MENU_VIEW.SAVES);
     setSession(createSession(slotId));
   };
 
@@ -196,7 +226,20 @@ export default function App() {
 
   const continueSlot = (slotId: SaveSlotId) => {
     const saved = saveRepository.load(slotId);
-    if (saved) setSession(saved);
+    if (saved) {
+      setMenuView(MENU_VIEW.SAVES);
+      setSession(saved);
+    }
+  };
+
+  const returnToMenu = () => {
+    setSession(null);
+    setMenuView(MENU_VIEW.SAVES);
+  };
+
+  const openUnlockables = () => {
+    setUnlockableProgress(unlockablesRepository.list());
+    setMenuView(MENU_VIEW.UNLOCKABLES);
   };
 
   const submitProfile = (profile: CharacterProfile) => {
@@ -211,12 +254,21 @@ export default function App() {
 
   const renderStory = () => {
     if (!session) {
+      if (menuView === MENU_VIEW.UNLOCKABLES) {
+        return (
+          <UnlockablesScreen
+            progress={unlockableProgress}
+            onBack={() => setMenuView(MENU_VIEW.SAVES)}
+          />
+        );
+      }
       return (
         <MenuScreen
           slots={slots}
           onNew={beginNew}
           onContinue={continueSlot}
           onDelete={(slotId) => setConfirmAction({ kind: "delete", slotId })}
+          onOpenUnlockables={openUnlockables}
         />
       );
     }
@@ -352,7 +404,7 @@ export default function App() {
           <EndingScreen
             session={session}
             showCaptions={preferences.captions}
-            onMenu={() => setSession(null)}
+            onMenu={returnToMenu}
           />
         );
     }
@@ -371,7 +423,7 @@ export default function App() {
           className="brand-button"
           type="button"
           aria-label={t("app.title")}
-          onClick={() => setSession(null)}
+          onClick={returnToMenu}
         >
           <span className="brand-button__mark" aria-hidden="true">
             ◇

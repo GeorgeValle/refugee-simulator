@@ -1,5 +1,15 @@
 # Changelog
 
+## PR #3 — Recorridos desbloqueables
+
+- Añadidos nueve recorridos desbloqueables globales con condiciones narrativas accesibles.
+- Añadida persistencia versionada independiente de las partidas, con validación, unión entre
+  pestañas, respaldo en memoria y recuperación desde partidas completadas existentes.
+- Añadida una pantalla de cartas bloqueadas o desbloqueadas desde el menú principal.
+- Añadidas reflexiones finales por franja de edad y un mensaje adicional cuando toda la familia
+  llega al campamento.
+- Añadidas pruebas unitarias, de integración, E2E y accesibilidad para el nuevo recorrido.
+
 ## PR #2 — Documentación y políticas
 
 - Añadida la guía raíz `AGENTS.md` con el mapa documental y las reglas de ramas, commits, reviews y merge.

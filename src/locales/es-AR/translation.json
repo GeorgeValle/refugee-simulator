@@ -37,6 +37,7 @@
     "overwriteBody": "El progreso guardado en esta ranura se perderá.",
     "deleteTitle": "¿Eliminar esta partida?",
     "deleteBody": "Esta acción no se puede deshacer.",
+    "unlockables": "Ver desbloqueables",
     "startHere": "Elegí una ranura para comenzar",
     "localOnly": "Tus decisiones se guardan solamente en este navegador."
   },
@@ -203,7 +204,64 @@
     "factNeighbourValue": "65%",
     "factNeighbourLabel": "viven en países vecinos al de origen",
     "source": "Consultar la fuente de ACNUR",
-    "restart": "Volver al menú"
+    "restart": "Volver al menú",
+    "personalized": {
+      "title": "Reflexión sobre tu llegada",
+      "allFamily": "Gracias al cielo, llegaron juntos al campamento. En medio del desarraigo y la incertidumbre, conservar esos vínculos les permitirá sostenerse unos a otros.",
+      "age": {
+        "childhood": "Atravesar una experiencia tan cruda a una edad tan corta puede dejar traumas y muchas carencias. Crecerás llevando marcas que ninguna niñez debería conocer.",
+        "adolescence": "La dura travesía te hizo madurar de golpe. Tu identidad quedará marcada y también tu forma de relacionarte con otras personas.",
+        "youth": "Siembra sin cosecha. Todo aquello que venías planificando desde hace tanto tiempo ya no podrá realizarse en la ciudad que tanto amás. Solo quedará un vacío difícil de llenar.",
+        "adulthood": "Una parte de tu ser quedó en la tierra que has dejado. Tu voluntad fue puesta al límite y esa herida quizás nunca sane por completo.",
+        "oldAge": "En tu larga vida te has enfrentado a muchas situaciones, pero ninguna te preparó para este duro desarraigo de tu tierra. La nostalgia te acompañará el resto de tus días como una marca indeleble."
+      }
+    }
+  },
+  "unlockables": {
+    "eyebrow": "Recorridos que permanecen",
+    "title": "Desbloqueables",
+    "intro": "Estas cartas registran distintos recorridos posibles. No son un puntaje ni miden el sufrimiento, la fortaleza o el valor de una persona.",
+    "locked": "Bloqueado",
+    "unlocked": "Desbloqueado",
+    "back": "Volver a partidas",
+    "cards": {
+      "familyTogether": {
+        "title": "Llegaron juntos",
+        "condition": "Llegá al campamento sin dejar atrás a ningún familiar."
+      },
+      "spouseOnly": {
+        "title": "Solo el uno al otro",
+        "condition": "Llegá al campamento con tu esposa o esposo como único familiar que permanece con vos."
+      },
+      "childhoodArrival": {
+        "title": "Niñez valiente",
+        "condition": "Llegá al campamento habiendo elegido Niñez."
+      },
+      "adolescenceArrival": {
+        "title": "Adolescencia dura",
+        "condition": "Llegá al campamento habiendo elegido Adolescencia."
+      },
+      "youthArrival": {
+        "title": "Juventud fuerte",
+        "condition": "Llegá al campamento habiendo elegido Juventud."
+      },
+      "adulthoodArrival": {
+        "title": "Madurez sólida",
+        "condition": "Llegá al campamento habiendo elegido Adultez."
+      },
+      "oldAgeArrival": {
+        "title": "Sabiduría firme",
+        "condition": "Llegá al campamento habiendo elegido Vejez."
+      },
+      "dreamRemains": {
+        "title": "La esperanza permanece",
+        "condition": "Llegá al campamento sin haber dejado atrás tu sueño."
+      },
+      "professionRemains": {
+        "title": "Verdadero profesional",
+        "condition": "Llegá al campamento sin haber dejado atrás tu profesión."
+      }
+    }
   },
   "chapters": {
     "createProfile": "Creación del personaje",

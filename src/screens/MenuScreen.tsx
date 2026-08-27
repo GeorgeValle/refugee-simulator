@@ -6,9 +6,16 @@ interface MenuScreenProps {
   onNew: (slotId: SaveSlotId) => void;
   onContinue: (slotId: SaveSlotId) => void;
   onDelete: (slotId: SaveSlotId) => void;
+  onOpenUnlockables: () => void;
 }
 
-export function MenuScreen({ slots, onNew, onContinue, onDelete }: MenuScreenProps) {
+export function MenuScreen({
+  slots,
+  onNew,
+  onContinue,
+  onDelete,
+  onOpenUnlockables,
+}: MenuScreenProps) {
   const { t, i18n } = useTranslation();
   return (
     <main className="menu-screen">
@@ -18,6 +25,9 @@ export function MenuScreen({ slots, onNew, onContinue, onDelete }: MenuScreenPro
           {t("app.title")}
         </h1>
         <div className="title-divider" />
+        <button className="button button--ghost" type="button" onClick={onOpenUnlockables}>
+          {t("menu.unlockables")}
+        </button>
       </div>
       <section className="save-slots" aria-labelledby="save-title">
         <h2 id="save-title">{t("menu.startHere")}</h2>
