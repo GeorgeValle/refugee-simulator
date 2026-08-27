@@ -16,6 +16,8 @@ ni telemetría.
 - Doce papelitos que representan familia, pertenencias, profesión, habilidad, ropa y sueños.
 - Tres etapas de pérdida: manual, contrarreloj y aleatoria, sin repetir sorteos al recargar.
 - Tres ranuras locales, con datos versionados y validados antes de leer o guardar.
+- Nueve recorridos desbloqueables globales que permanecen aunque se borren las partidas.
+- Reflexiones finales personalizadas según la edad y la familia que llegó al campamento.
 - Interfaz `es-AR` con voseo y recursos i18next separados del código.
 - Fondos y personajes originales de estilo anime semirrealista.
 - Música y efectos sintetizados en el navegador mediante Web Audio, sin archivos ni servicios
@@ -144,7 +146,8 @@ src/
 │   ├── model.ts         Constantes y tipos derivados del dominio
 │   ├── reducer.ts       Máquina narrativa y reglas de pérdida
 │   ├── schema.ts        Esquemas de validación Zod
-│   ├── storage.ts       Tres ranuras y preferencias locales
+│   ├── storage.ts       Partidas, preferencias y desbloqueables locales
+│   ├── unlockables.ts   Condiciones y evaluación de recorridos desbloqueables
 │   └── NarrativeScene.ts Escena visual de Phaser
 ├── hooks/               Orientación y preferencia de movimiento del sistema
 ├── locales/es-AR/       Recursos de la primera localización
@@ -165,7 +168,9 @@ docs/                    Documentación y referencias no incluidas en el build
 8. En el pueblo se dejan otros dos en diez segundos; el sistema completa al azar cero, una o dos
    elecciones faltantes.
 9. Un grupo armado ficticio quita dos papelitos activos al azar.
-10. El campamento resume seis pérdidas y los seis papelitos que permanecen.
+10. El campamento resume seis pérdidas y los seis papelitos que permanecen, añade una reflexión
+    según la edad y, si corresponde, reconoce que toda la familia llegó reunida.
+11. Al llegar al campamento se registran los recorridos desbloqueables cumplidos.
 
 Una pérdida familiar siempre significa **separación forzada y destino desconocido**, nunca muerte.
 Hijas, hijos, hermanas y hermanos pueden repetirse; los otros parentescos son únicos. Parejas e
@@ -177,6 +182,7 @@ Las claves usadas son:
 
 - `refugee-simulator:saves:v1`: arreglo con hasta tres sesiones.
 - `refugee-simulator:preferences:v1`: volumen, subtítulos y movimiento.
+- `refugee-simulator:unlockables:v1`: IDs y primera fecha de los recorridos desbloqueados.
 - `refugee-simulator:warning-accepted`: aceptación del aviso durante la pestaña actual.
 
 Los textos escritos por la persona jugadora permanecen exclusivamente en su navegador. No hay
@@ -184,6 +190,10 @@ peticiones de red en el juego de producción. Borrar los datos del sitio elimina
 Si el navegador rechaza una escritura, la partida y las preferencias continúan disponibles en la
 memoria de la pestaña y aparece un aviso accesible. Esos cambios temporales se pierden al recargar o
 cerrar la pestaña; una escritura posterior exitosa vuelve automáticamente al modo persistente.
+
+Los desbloqueables son globales y no pertenecen a una ranura. Borrar una partida no los elimina;
+para conservar la privacidad solo registran el identificador del recorrido y la fecha de su primer
+desbloqueo, nunca los nombres ni los textos escritos durante la aventura.
 
 El plazo del contador se guarda como marca temporal absoluta. Al entrar en modo vertical se
 convierte en milisegundos restantes; al regresar a horizontal se reconstruye el plazo. Los reducers
@@ -234,10 +244,10 @@ pnpm build
 pnpm test:e2e
 ```
 
-La suite cubre reglas familiares, formularios, guardado corrupto, las tres ranuras, selección
-manual, vencimiento total y parcial, aleatoriedad inyectada, ausencia de rerolls, pausa exacta al
-rotar, recorrido completo en escritorio y teléfono horizontal, teclado, reducción de movimiento y
-axe-core.
+La suite cubre reglas familiares, formularios, guardado corrupto, las tres ranuras, condiciones y
+persistencia de desbloqueables, selección manual, vencimiento total y parcial, aleatoriedad
+inyectada, ausencia de rerolls, pausa exacta al rotar, recorrido completo en escritorio y teléfono
+horizontal, teclado, reducción de movimiento y axe-core.
 
 La navegación de la SPA mueve el foco al título o diálogo de cada capítulo. La comprobación manual
 completa con NVDA o VoiceOver sigue documentada como validación previa a una publicación pública;
