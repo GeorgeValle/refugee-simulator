@@ -61,8 +61,13 @@ function reachTimedLoss(): GameSession {
   });
   session = gameReducer(session, {
     type: GAME_EVENT.GO_TO,
-    step: STORY_STEP.VILLAGE,
+    step: STORY_STEP.VILLAGE_ARRIVAL,
     now: 1_600,
+  });
+  session = gameReducer(session, {
+    type: GAME_EVENT.GO_TO,
+    step: STORY_STEP.VILLAGE,
+    now: 1_700,
   });
   return gameReducer(session, { type: GAME_EVENT.START_TIMED_LOSS, now: 2_000 });
 }
@@ -93,6 +98,45 @@ describe("game reducer", () => {
     });
     expect(session.losses).toHaveLength(2);
     expect(session.slips.filter((slip) => slip.status === SLIP_STATUS.LOST)).toHaveLength(2);
+  });
+
+  it("keeps the village arrival and warning free of countdown state", () => {
+    let session = createPackedSession();
+    const [first, second] = session.slips;
+    if (!first || !second) throw new Error("Expected packed slips");
+    for (const [index, slip] of [first, second].entries()) {
+      session = gameReducer(session, {
+        type: GAME_EVENT.TOGGLE_PENDING_LOSS,
+        slipId: slip.id,
+        now: 1_400 + index,
+      });
+    }
+    session = gameReducer(session, {
+      type: GAME_EVENT.COMMIT_SELECTED_LOSSES,
+      cause: LOSS_CAUSE.FIRST_DEPARTURE,
+      now: 1_500,
+    });
+    session = gameReducer(session, {
+      type: GAME_EVENT.GO_TO,
+      step: STORY_STEP.VILLAGE_ARRIVAL,
+      now: 1_600,
+    });
+    expect(session.step).toBe(STORY_STEP.VILLAGE_ARRIVAL);
+    expect(session.timerDeadline).toBeNull();
+    expect(session.timerRemainingMs).toBeNull();
+
+    session = gameReducer(session, {
+      type: GAME_EVENT.GO_TO,
+      step: STORY_STEP.VILLAGE,
+      now: 1_700,
+    });
+    expect(session.step).toBe(STORY_STEP.VILLAGE);
+    expect(session.timerDeadline).toBeNull();
+    expect(session.timerRemainingMs).toBeNull();
+
+    session = gameReducer(session, { type: GAME_EVENT.START_TIMED_LOSS, now: 2_000 });
+    expect(session.step).toBe(STORY_STEP.TIMED_LOSS);
+    expect(session.timerDeadline).toBe(12_000);
   });
 
   it("fills one missing timed choice at random and does not reroll after leaving the step", () => {

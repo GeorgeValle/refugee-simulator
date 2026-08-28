@@ -48,6 +48,7 @@ export const STORY_STEP = {
   FAMILY: "family",
   PACKING: "packing",
   FIRST_LOSS: "firstLoss",
+  VILLAGE_ARRIVAL: "villageArrival",
   VILLAGE: "village",
   TIMED_LOSS: "timedLoss",
   JOURNEY: "journey",

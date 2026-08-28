@@ -45,12 +45,16 @@ recorridos.
 
 1. Aviso de contenido, menú y tres ranuras.
 2. Género y franja de edad: Niñez, Adolescencia, Juventud, Adultez o Vejez.
-3. Departamento nocturno, amenaza cercana y televisión con caravana ficticia.
+3. Departamento nocturno, amenaza cercana y televisión que explica que una caravana ficticia tomó
+   la ciudad vecina y obliga a la familia a huir hacia la frontera.
 4. Selección y nombre de cuatro familiares, con restricciones por edad y unicidad.
 5. Doce papelitos: familia, objetos, profesión, habilidad, ropa favorita y sueño.
-6. Dos pérdidas manuales, dos pérdidas contrarreloj y dos pérdidas aleatorias.
-7. Llegada al campamento, resumen de pérdidas y reflexiones personalizadas por edad y familia.
-8. Evaluación de nueve recorridos desbloqueables relacionados con la familia, la edad y los
+6. Dos pérdidas manuales antes de salir de Nahr.
+7. Llegada y descanso en Rihal, un pueblo ficticio camino a la frontera, antes de una advertencia
+   que inicia una nueva huida.
+8. Dos pérdidas contrarreloj en Rihal y dos pérdidas aleatorias durante el encuentro armado.
+9. Llegada al campamento, resumen de pérdidas y reflexiones personalizadas por edad y familia.
+10. Evaluación de nueve recorridos desbloqueables relacionados con la familia, la edad y los
    aspectos de identidad o futuro que permanecieron.
 
 Una separación familiar siempre se describe como destino desconocido, nunca como fallecimiento.

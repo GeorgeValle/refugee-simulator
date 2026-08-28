@@ -11,6 +11,17 @@ describe("game session invariants", () => {
     }
   });
 
+  it("accepts both the new arrival chapter and legacy saves at the village warning", () => {
+    const arrival = createStorySession(STORY_STEP.VILLAGE_ARRIVAL);
+    const legacyWarning = createStorySession(STORY_STEP.VILLAGE);
+
+    expect(arrival.schemaVersion).toBe(1);
+    expect(arrival.losses).toHaveLength(2);
+    expect(arrival.timerDeadline).toBeNull();
+    expect(gameSessionSchema.safeParse(arrival).success).toBe(true);
+    expect(gameSessionSchema.safeParse(legacyWarning).success).toBe(true);
+  });
+
   it("accepts either a running or paused timer, but never both", () => {
     const running = createStorySession(STORY_STEP.TIMED_LOSS);
     const paused = gameReducer(running, { type: GAME_EVENT.PAUSE_TIMER, now: 2_050 });

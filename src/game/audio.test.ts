@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ProceduralAudioDirector } from "@/game/audio";
-import { DEFAULT_AUDIO_PREFERENCES } from "@/game/model";
+import { DEFAULT_AUDIO_PREFERENCES, STORY_STEP } from "@/game/model";
 
 class FakeAudioParam {
   value = 0;
@@ -57,6 +57,7 @@ class FakeAudioContext {
 
 describe("ProceduralAudioDirector pause lifecycle", () => {
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.unstubAllGlobals();
     FakeAudioContext.instances = [];
   });
@@ -99,6 +100,23 @@ describe("ProceduralAudioDirector pause lifecycle", () => {
     await Promise.resolve();
 
     expect(context?.oscillatorCount).toBe(3);
+    director.destroy();
+  });
+
+  it("keeps the arrival calm and schedules ticking only for the timed loss", async () => {
+    vi.stubGlobal("AudioContext", FakeAudioContext as unknown as typeof AudioContext);
+    const timeoutSpy = vi.spyOn(window, "setTimeout");
+    const director = new ProceduralAudioDirector(DEFAULT_AUDIO_PREFERENCES);
+    await director.unlock();
+
+    director.setScene(STORY_STEP.VILLAGE_ARRIVAL);
+    expect(timeoutSpy).not.toHaveBeenCalled();
+
+    director.setScene(STORY_STEP.VILLAGE);
+    expect(timeoutSpy).not.toHaveBeenCalled();
+
+    director.setScene(STORY_STEP.TIMED_LOSS);
+    expect(timeoutSpy).toHaveBeenCalledOnce();
     director.destroy();
   });
 });

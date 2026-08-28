@@ -12,7 +12,7 @@ async function acceptWarning(page: Page) {
   await page.getByRole("button", { name: "Entiendo y quiero continuar" }).click();
 }
 
-async function reachTimedLoss(page: Page, auditAccessibility = false) {
+async function reachTimedLoss(page: Page, auditAccessibility = false, reloadAtArrival = false) {
   await page.getByRole("button", { name: "Juego nuevo" }).first().click();
   if (auditAccessibility) await expectNoSeriousAxeViolations(page);
   await page.getByRole("button", { name: "Hombre" }).click();
@@ -62,6 +62,52 @@ async function reachTimedLoss(page: Page, auditAccessibility = false) {
   await firstLossChoices.nth(0).click();
   await firstLossChoices.nth(1).click();
   await page.getByRole("button", { name: "Dejarlos atrás" }).click();
+
+  await expect(page.locator(".dialogue .u-visually-hidden")).toContainText(
+    "llegan a Rihal, un pequeño pueblo en el camino hacia la frontera",
+  );
+  await page.getByRole("button", { name: "Mostrar todo el texto" }).click();
+  await expect(page.locator(".dialogue__text")).toContainText(
+    "llegan a Rihal, un pequeño pueblo en el camino hacia la frontera",
+  );
+  await expect(page.getByText("Llegada a Rihal")).toBeVisible();
+  if (auditAccessibility) await expectNoSeriousAxeViolations(page);
+
+  if (reloadAtArrival) {
+    await page.waitForFunction(() => {
+      const sessions = JSON.parse(localStorage.getItem("refugee-simulator:saves:v1") ?? "[]");
+      return sessions[0]?.step === "villageArrival";
+    });
+    await page.reload();
+    await page.getByRole("button", { name: "Continuar", exact: true }).click();
+    await expect(page.locator(".dialogue .u-visually-hidden")).toContainText(
+      "llegan a Rihal, un pequeño pueblo en el camino hacia la frontera",
+    );
+    await page.getByRole("button", { name: "Mostrar todo el texto" }).click();
+  }
+
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page.locator(".dialogue .u-visually-hidden")).toContainText(
+    "Las fuerzas enemigas están a pocas horas de Rihal",
+  );
+  await page.getByRole("button", { name: "Mostrar todo el texto" }).click();
+  await expect(page.locator(".dialogue__text")).toContainText(
+    "Las fuerzas enemigas están a pocas horas de Rihal",
+  );
+  await expect(page.getByText("La advertencia en Rihal")).toBeVisible();
+  if (auditAccessibility) await expectNoSeriousAxeViolations(page);
+
+  await page.waitForFunction(() => {
+    const sessions = JSON.parse(localStorage.getItem("refugee-simulator:saves:v1") ?? "[]");
+    return sessions[0]?.step === "village";
+  });
+  const warningSave = await page.evaluate(() => {
+    const sessions = JSON.parse(localStorage.getItem("refugee-simulator:saves:v1") ?? "[]");
+    return sessions[0];
+  });
+  expect(warningSave.timerDeadline).toBeNull();
+  expect(warningSave.timerRemainingMs).toBeNull();
+
   await page.getByRole("button", { name: "Continuar" }).click();
   await expect(page.getByRole("heading", { name: "Elegí dos papelitos" })).toBeVisible();
   if (auditAccessibility) await expectNoSeriousAxeViolations(page);
@@ -106,10 +152,11 @@ test("continúa en memoria y avisa cuando localStorage rechaza escrituras", asyn
 });
 
 test("completa la historia y conserva las decisiones", async ({ page }) => {
+  test.setTimeout(60_000);
   await page.goto("/");
   await acceptWarning(page);
   await expect(page.locator("canvas")).toBeVisible();
-  await reachTimedLoss(page, true);
+  await reachTimedLoss(page, true, true);
 
   const timedChoices = page.locator(".paper-slip--button");
   await timedChoices.nth(0).click();

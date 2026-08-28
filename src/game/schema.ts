@@ -184,6 +184,7 @@ export const gameSessionSchema: z.ZodType<GameSession> = gameSessionShape.superR
     const familyRequired = at(
       STORY_STEP.PACKING,
       STORY_STEP.FIRST_LOSS,
+      STORY_STEP.VILLAGE_ARRIVAL,
       STORY_STEP.VILLAGE,
       STORY_STEP.TIMED_LOSS,
       STORY_STEP.JOURNEY,
@@ -198,6 +199,7 @@ export const gameSessionSchema: z.ZodType<GameSession> = gameSessionShape.superR
 
     const packed = at(
       STORY_STEP.FIRST_LOSS,
+      STORY_STEP.VILLAGE_ARRIVAL,
       STORY_STEP.VILLAGE,
       STORY_STEP.TIMED_LOSS,
       STORY_STEP.JOURNEY,
@@ -232,6 +234,7 @@ export const gameSessionSchema: z.ZodType<GameSession> = gameSessionShape.superR
     ]);
     if (
       at(
+        STORY_STEP.VILLAGE_ARRIVAL,
         STORY_STEP.VILLAGE,
         STORY_STEP.TIMED_LOSS,
         STORY_STEP.JOURNEY,
