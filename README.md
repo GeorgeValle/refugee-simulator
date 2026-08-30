@@ -171,8 +171,10 @@ docs/                    Documentación y referencias no incluidas en el build
 9. En Rihal se dejan otros dos papelitos en diez segundos; el sistema completa al azar cero, una o
    dos elecciones faltantes.
 10. Un grupo armado ficticio quita dos papelitos activos al azar.
-11. El campamento resume seis pérdidas y los seis papelitos que permanecen, añade una reflexión
-    según la edad y, si corresponde, reconoce que toda la familia llegó reunida.
+11. El campamento separa el recuento de pertenencias e identidad del de las personas: muestra los
+    familiares separados con retratos grises y destino desconocido, y a quienes llegaron con
+    retratos a color. También añade una reflexión según la edad y, si corresponde, reconoce que
+    toda la familia llegó reunida.
 12. Al llegar al campamento se registran los recorridos desbloqueables cumplidos.
 
 Una pérdida familiar siempre significa **separación forzada y destino desconocido**, nunca muerte.

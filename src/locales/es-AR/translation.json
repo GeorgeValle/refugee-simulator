@@ -195,7 +195,13 @@
   "ending": {
     "eyebrow": "Llegaste al campamento",
     "title": "Lo que quedó atrás",
+    "separatedFamilyTitle": "Quiénes quedaron atrás",
     "remainingTitle": "Lo que todavía llevás con vos",
+    "arrivedFamilyTitle": "¿Con quiénes llegaste?",
+    "familySeparatedStatus": "Separación forzada",
+    "familyArrivedStatus": "Llegó con vos",
+    "familyUnknown": "Su destino continúa siendo desconocido.",
+    "noFamilyArrived": "No llegó con vos ninguna de las personas con quienes emprendiste la huida. Sus destinos continúan siendo desconocidos.",
     "factsTitle": "El desplazamiento forzado en cifras",
     "factsIntro": "Datos mundiales de ACNUR correspondientes al cierre de 2025, publicados el 11 de junio de 2026.",
     "sourceEyebrow": "ACNUR · 2026",

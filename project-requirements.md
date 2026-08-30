@@ -53,7 +53,10 @@ recorridos.
 7. Llegada y descanso en Rihal, un pueblo ficticio camino a la frontera, antes de una advertencia
    que inicia una nueva huida.
 8. Dos pérdidas contrarreloj en Rihal y dos pérdidas aleatorias durante el encuentro armado.
-9. Llegada al campamento, resumen de pérdidas y reflexiones personalizadas por edad y familia.
+9. Llegada al campamento y resumen en cuatro grupos: elementos no familiares perdidos, familiares
+   separados con destino desconocido, elementos no familiares conservados y familiares que
+   llegaron. Las personas se representan con nombre, parentesco y retratos diferenciados, seguidos
+   por reflexiones personalizadas por edad y familia.
 10. Evaluación de nueve recorridos desbloqueables relacionados con la familia, la edad y los
    aspectos de identidad o futuro que permanecieron.
 

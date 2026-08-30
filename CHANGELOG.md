@@ -1,6 +1,16 @@
 # Changelog
 
-## Próxima PR — Llegada a Rihal
+## Próxima PR — Resumen final agrupado
+
+- Separado el recuento final en pertenencias o aspectos personales y familiares.
+- Añadidos retratos grises para familiares separados y retratos a color para quienes llegaron al
+  campamento, con nombre, parentesco y estado accesible.
+- Conservadas la causa de cada separación y la aclaración de destino desconocido, incluido un
+  mensaje específico cuando ningún familiar llega.
+- Añadida cobertura para resultados familiares completos, vacíos y mixtos sin modificar el formato
+  de las partidas guardadas.
+
+## PR #4 — Llegada a Rihal
 
 - Aclarado que la caravana tomó la ciudad vecina y que la familia huye desde Nahr hacia la frontera.
 - Añadida una escena de llegada y descanso en Rihal entre las primeras pérdidas y la advertencia
