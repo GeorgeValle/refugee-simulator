@@ -985,12 +985,14 @@ a:focus-visible {
   color: var(--ink);
 }
 .loss-summary,
-.remaining-summary {
+.remaining-summary,
+.family-outcome-summary {
   padding: 48px 0;
   border-top: 1px solid var(--line);
 }
 .loss-summary h2,
 .remaining-summary h2,
+.family-outcome-summary h2,
 .facts-panel h2 {
   margin: 0 0 26px;
   font-family: Georgia, serif;
@@ -1025,6 +1027,87 @@ a:focus-visible {
   background: var(--paper);
   clip-path: polygon(8% 0, 100% 5%, 92% 100%, 70% 90%, 53% 100%, 36% 89%, 17% 100%, 0 86%);
   opacity: 0.7;
+}
+.family-outcome-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.family-outcome-card {
+  display: grid;
+  justify-items: center;
+  min-width: 0;
+  padding: 20px 16px;
+  border: 1px solid rgba(114, 197, 193, 0.28);
+  border-radius: 14px;
+  background: linear-gradient(160deg, rgba(41, 68, 83, 0.55), rgba(11, 24, 38, 0.92));
+  text-align: center;
+}
+.family-outcome-card--separated {
+  border-color: rgba(205, 207, 211, 0.25);
+  background: linear-gradient(160deg, rgba(76, 80, 86, 0.42), rgba(17, 20, 25, 0.94));
+}
+.family-outcome-card__portrait {
+  width: 104px;
+  height: 104px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(114, 197, 193, 0.38);
+  border-radius: 50%;
+  background: radial-gradient(circle, #31475b, #111a28);
+  overflow: hidden;
+}
+.family-outcome-card__portrait img {
+  width: 100%;
+  height: 120%;
+  object-fit: contain;
+  object-position: center top;
+  transform: translateY(10px);
+}
+.family-outcome-card--separated .family-outcome-card__portrait {
+  border-color: rgba(205, 207, 211, 0.3);
+  background: radial-gradient(circle, #545960, #181b20);
+}
+.family-outcome-card--separated .family-outcome-card__portrait img {
+  filter: grayscale(1);
+  opacity: 0.58;
+}
+.family-outcome-card__status {
+  margin-bottom: 8px;
+  color: var(--teal-light);
+  font-size: 0.67rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.family-outcome-card--separated .family-outcome-card__status {
+  color: #c5c8cd;
+}
+.family-outcome-card strong {
+  overflow-wrap: anywhere;
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+}
+.family-outcome-card strong + span {
+  margin-top: 4px;
+  color: var(--ink-muted);
+}
+.family-outcome-card p {
+  margin: 13px 0 5px;
+  color: #c5c8cd;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.family-outcome-card small {
+  color: var(--gold-light);
+}
+.family-outcome-summary__empty {
+  max-width: 720px;
+  margin: 0;
+  padding: 20px 22px;
+  border-left: 3px solid rgba(225, 185, 107, 0.55);
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--ink-muted);
+  line-height: 1.65;
 }
 .facts-panel {
   margin-top: 50px !important;
@@ -1256,6 +1339,9 @@ a:focus-visible {
   .unlockables-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .family-outcome-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (orientation: landscape) and (max-height: 560px) {
@@ -1375,6 +1461,16 @@ a:focus-visible {
   .family-card select {
     min-height: 44px;
     padding: 5px 8px;
+  }
+  .family-outcome-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .family-outcome-card {
+    padding: 14px 10px;
+  }
+  .family-outcome-card__portrait {
+    width: 76px;
+    height: 76px;
   }
   .packing-layout {
     gap: 8px;
