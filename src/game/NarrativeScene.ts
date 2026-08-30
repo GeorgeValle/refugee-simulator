@@ -12,6 +12,7 @@ const BACKGROUND_BY_STEP: Record<VisualCommand["step"], string> = {
   [STORY_STEP.FAMILY]: "apartment",
   [STORY_STEP.PACKING]: "apartment",
   [STORY_STEP.FIRST_LOSS]: "apartment",
+  [STORY_STEP.VILLAGE_ARRIVAL]: "village",
   [STORY_STEP.VILLAGE]: "village",
   [STORY_STEP.TIMED_LOSS]: "village",
   [STORY_STEP.JOURNEY]: "journey",

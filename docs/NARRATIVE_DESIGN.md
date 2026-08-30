@@ -12,9 +12,13 @@ empatía y reflexión, no simular una experiencia de sufrimiento como entretenim
 2. **Amenaza:** departamento, explosiones lejanas y noticia de la llegada de soldados.
 3. **Preparación:** cuatro familiares y doce papelitos escritos por la persona jugadora.
 4. **Primera huida:** elección consciente de dos pérdidas.
-5. **Pueblo:** diez segundos para elegir dos pérdidas adicionales; el sistema completa las faltantes.
-6. **Aldea forestal:** un grupo armado ficticio toma dos papelitos activos al azar.
-7. **Campamento:** resumen personalizado, separación y reflexión final.
+5. **Llegada a Rihal:** la familia alcanza un pueblo camino a la frontera y descansa brevemente en
+   la casa de una familia local.
+6. **Advertencia en Rihal:** una habitante anuncia la cercanía de las fuerzas enemigas; al decidir
+   continuar comienza el plazo de diez segundos para elegir dos pérdidas adicionales y el sistema
+   completa las faltantes.
+7. **Aldea forestal:** un grupo armado ficticio toma dos papelitos activos al azar.
+8. **Campamento:** resumen personalizado, separación y reflexión final.
 
 ## Reflexión final personalizada
 

@@ -321,10 +321,20 @@ export default function App() {
             onConfirm={() =>
               dispatchMany(
                 { type: GAME_EVENT.COMMIT_SELECTED_LOSSES, cause: LOSS_CAUSE.FIRST_DEPARTURE },
-                { type: GAME_EVENT.GO_TO, step: STORY_STEP.VILLAGE },
+                { type: GAME_EVENT.GO_TO, step: STORY_STEP.VILLAGE_ARRIVAL },
               )
             }
             onExpire={() => undefined}
+          />
+        );
+      case STORY_STEP.VILLAGE_ARRIVAL:
+        return (
+          <DialogueBox
+            speaker={t("story.villageArrival.speaker")}
+            body={t("story.villageArrival.body")}
+            actionLabel={t("common.continue")}
+            reducedMotion={reducedMotion}
+            onAction={() => goTo(STORY_STEP.VILLAGE)}
           />
         );
       case STORY_STEP.VILLAGE:

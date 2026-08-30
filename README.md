@@ -161,16 +161,19 @@ docs/                    Documentación y referencias no incluidas en el build
 1. Se acepta el aviso de contenido y se elige una de tres partidas.
 2. Se define hombre/mujer y una de cinco franjas de edad.
 3. El departamento presenta las explosiones lejanas de forma no gráfica.
-4. La televisión anuncia una caravana ficticia y sin marcas.
+4. La televisión anuncia que una caravana ficticia tomó la ciudad vecina y que la familia debe
+   huir hacia la frontera.
 5. Se nombran cuatro familiares.
 6. Se crean cuatro papelitos familiares, cuatro de objetos y cuatro de identidad/futuro.
 7. Se dejan dos papelitos manualmente.
-8. En el pueblo se dejan otros dos en diez segundos; el sistema completa al azar cero, una o dos
-   elecciones faltantes.
-9. Un grupo armado ficticio quita dos papelitos activos al azar.
-10. El campamento resume seis pérdidas y los seis papelitos que permanecen, añade una reflexión
+8. La familia llega a Rihal, un pueblo camino a la frontera, y descansa antes de recibir una nueva
+   advertencia.
+9. En Rihal se dejan otros dos papelitos en diez segundos; el sistema completa al azar cero, una o
+   dos elecciones faltantes.
+10. Un grupo armado ficticio quita dos papelitos activos al azar.
+11. El campamento resume seis pérdidas y los seis papelitos que permanecen, añade una reflexión
     según la edad y, si corresponde, reconoce que toda la familia llegó reunida.
-11. Al llegar al campamento se registran los recorridos desbloqueables cumplidos.
+12. Al llegar al campamento se registran los recorridos desbloqueables cumplidos.
 
 Una pérdida familiar siempre significa **separación forzada y destino desconocido**, nunca muerte.
 Hijas, hijos, hermanas y hermanos pueden repetirse; los otros parentescos son únicos. Parejas e

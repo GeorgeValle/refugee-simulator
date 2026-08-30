@@ -69,7 +69,13 @@ export function createStorySessions(slotId: SaveSlotId = 1): GameSession[] {
     cause: LOSS_CAUSE.FIRST_DEPARTURE,
     now: 1_700,
   });
-  session = gameReducer(session, { type: GAME_EVENT.GO_TO, step: STORY_STEP.VILLAGE, now: 1_800 });
+  session = gameReducer(session, {
+    type: GAME_EVENT.GO_TO,
+    step: STORY_STEP.VILLAGE_ARRIVAL,
+    now: 1_800,
+  });
+  sessions.push(session);
+  session = gameReducer(session, { type: GAME_EVENT.GO_TO, step: STORY_STEP.VILLAGE, now: 1_900 });
   sessions.push(session);
 
   session = gameReducer(session, { type: GAME_EVENT.START_TIMED_LOSS, now: 2_000 });

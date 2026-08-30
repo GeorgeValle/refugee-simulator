@@ -1,5 +1,15 @@
 # Changelog
 
+## Próxima PR — Llegada a Rihal
+
+- Aclarado que la caravana tomó la ciudad vecina y que la familia huye desde Nahr hacia la frontera.
+- Añadida una escena de llegada y descanso en Rihal entre las primeras pérdidas y la advertencia
+  urgente.
+- Separada la llegada sin personajes de la aparición posterior de la habitante que anuncia la
+  cercanía de las fuerzas enemigas.
+- Conservada la compatibilidad con las partidas existentes y añadido el nuevo capítulo a las
+  validaciones y pruebas narrativas.
+
 ## PR #3 — Recorridos desbloqueables
 
 - Añadidos nueve recorridos desbloqueables globales con condiciones narrativas accesibles.

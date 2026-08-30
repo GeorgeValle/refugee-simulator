@@ -100,7 +100,7 @@
     },
     "television": {
       "speaker": "Televisor",
-      "body": "Una caravana armada cruzó la ciudad vecina. Calculan que llegará a Nahr en menos de un día. No te queda otra que escapar con quienes viven junto a vos."
+      "body": "Una caravana armada tomó el control de la ciudad vecina. Calculan que llegará a Nahr en menos de un día. No te queda otra que escapar con tu familia hacia la frontera."
     },
     "familyIntro": "¿Con quiénes vivís? Elegí cuatro familiares y escribí sus nombres.",
     "packing": {
@@ -111,9 +111,13 @@
       "speaker": "Narración",
       "body": "Lamentablemente, no podés llevar todo en la huida. Elegí dos papelitos que tendrán que quedar atrás."
     },
+    "villageArrival": {
+      "speaker": "Narración",
+      "body": "Después de dejar Nahr, caminan durante horas por senderos secundarios para evitar la caravana. Al caer la noche llegan a Rihal, un pequeño pueblo en el camino hacia la frontera. Una familia del lugar les abre las puertas de su casa y, agotados, se permiten descansar antes de continuar la huida."
+    },
     "village": {
-      "speaker": "Habitante del pueblo",
-      "body": "¡Tenemos que irnos! Los soldados están a pocas horas. No hay tiempo para discutir ni para preparar más equipaje."
+      "speaker": "Habitante de Rihal",
+      "body": "¡Tenemos que irnos! Las fuerzas enemigas están a pocas horas de Rihal. Si queremos llegar a la frontera, tenemos que salir ahora. No hay tiempo para preparar más equipaje."
     },
     "timedLoss": {
       "speaker": "Narración",
@@ -270,7 +274,8 @@
     "family": "Quienes viven con vos",
     "packing": "Lo que podés llevar",
     "firstLoss": "La primera renuncia",
-    "village": "El pueblo",
+    "villageArrival": "Llegada a Rihal",
+    "village": "La advertencia en Rihal",
     "timedLoss": "Diez segundos",
     "journey": "Dos días a pie",
     "forest": "La aldea del bosque",
