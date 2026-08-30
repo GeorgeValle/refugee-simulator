@@ -18,7 +18,21 @@ empatía y reflexión, no simular una experiencia de sufrimiento como entretenim
    continuar comienza el plazo de diez segundos para elegir dos pérdidas adicionales y el sistema
    completa las faltantes.
 7. **Aldea forestal:** un grupo armado ficticio toma dos papelitos activos al azar.
-8. **Campamento:** resumen personalizado, separación y reflexión final.
+8. **Campamento:** resumen agrupado de personas y elementos, separación y reflexión final.
+
+## Resumen final agrupado
+
+El recuento del campamento diferencia las personas de las pertenencias, capacidades y proyectos de
+vida. Los papelitos no familiares se distribuyen entre **Lo que quedó atrás** y **Lo que todavía
+llevás con vos**. Los familiares se presentan por separado en **Quiénes quedaron atrás** y **¿Con
+quiénes llegaste?**.
+
+Cada familiar muestra su nombre y parentesco mediante los retratos ficticios ya distribuidos. Las
+personas separadas aparecen en escala de grises, conservan la causa de separación y se describen
+con destino desconocido; quienes llegan aparecen a color. El texto y la estructura semántica
+comunican también el resultado, de modo que el color no sea la única señal. Si nadie llega con el
+personaje, se explica expresamente que los destinos de todas esas personas continúan siendo
+desconocidos, sin insinuar que hayan muerto.
 
 ## Reflexión final personalizada
 
