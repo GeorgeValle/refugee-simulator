@@ -170,15 +170,28 @@ test("completa la historia y conserva las decisiones", async ({ page }) => {
   await page.getByRole("button", { name: "Continuar" }).click();
 
   await expect(page.getByRole("heading", { name: "Lo que quedó atrás" }).first()).toBeVisible();
+  await expect(page.locator(".loss-summary li")).toHaveCount(2);
+  const separatedFamilyCards = page.locator(
+    ".family-outcome-summary--separated .family-outcome-card",
+  );
+  await expect(separatedFamilyCards).toHaveCount(4);
+  const separatedPortraitFilters = await separatedFamilyCards
+    .locator(".family-outcome-card__portrait img")
+    .evaluateAll((images) => images.map((image) => getComputedStyle(image).filter));
+  expect(separatedPortraitFilters.every((filter) => filter.includes("grayscale(1)"))).toBe(true);
+  await expect(page.getByRole("heading", { name: "¿Con quiénes llegaste?" })).toBeVisible();
+  await expect(page.getByText(/No llegó con vos ninguna de las personas/)).toBeVisible();
+  await expect(page.locator(".remaining-summary .paper-slip")).toHaveCount(6);
   await expect(page.getByText(/Siembra sin cosecha/)).toBeVisible();
   await expect(page.getByText("117,8 millones")).toBeVisible();
-  await expect(page.getByText(/No sabés qué ocurrió después/).first()).toBeVisible();
+  await expect(page.getByText(/Su destino continúa siendo desconocido/).first()).toBeVisible();
   await expectNoSeriousAxeViolations(page);
 
   await page.reload();
   await page.getByRole("button", { name: "Continuar partida" }).click();
   await expect(page.getByRole("heading", { name: "Lo que quedó atrás" }).first()).toBeVisible();
-  await expect(page.locator(".loss-summary li")).toHaveCount(6);
+  await expect(page.locator(".loss-summary li")).toHaveCount(2);
+  await expect(page.locator(".family-outcome-summary--separated article")).toHaveCount(4);
 
   await page.getByRole("button", { name: "Simulador de Refugiado" }).click();
   await page.getByRole("button", { name: "Ver desbloqueables" }).click();
