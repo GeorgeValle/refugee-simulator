@@ -5,7 +5,7 @@ import {
   type AudioPreferences,
   type GameSession,
   GENDER,
-  getEligibleRelationships,
+  getPersistedEligibleRelationships,
   LOSS_CAUSE,
   type MemorySlip,
   RELATIONSHIP,
@@ -150,7 +150,7 @@ export const gameSessionSchema: z.ZodType<GameSession> = gameSessionShape.superR
     }
 
     if (session.profile) {
-      const eligible = new Set(getEligibleRelationships(session.profile.ageBand));
+      const eligible = new Set(getPersistedEligibleRelationships(session.profile.ageBand));
       const relationshipCounts = new Map<Relationship, number>();
       for (const [index, member] of session.family.entries()) {
         if (!eligible.has(member.relationship)) {

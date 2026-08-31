@@ -210,6 +210,29 @@ export function getEligibleRelationships(ageBand: AgeBand): Relationship[] {
   ];
 }
 
+export function getPersistedEligibleRelationships(ageBand: AgeBand): Relationship[] {
+  const eligible = getEligibleRelationships(ageBand);
+  if (ageBand === AGE_BAND.ADULTHOOD) {
+    return [
+      ...eligible,
+      RELATIONSHIP.UNCLE,
+      RELATIONSHIP.AUNT,
+      RELATIONSHIP.GRANDFATHER,
+      RELATIONSHIP.GRANDMOTHER,
+    ];
+  }
+  if (ageBand === AGE_BAND.OLD_AGE) {
+    return [
+      ...eligible,
+      RELATIONSHIP.UNCLE,
+      RELATIONSHIP.AUNT,
+      RELATIONSHIP.FATHER,
+      RELATIONSHIP.MOTHER,
+    ];
+  }
+  return eligible;
+}
+
 export function usesSportSlip(ageBand: AgeBand): boolean {
   return ageBand === AGE_BAND.CHILDHOOD || ageBand === AGE_BAND.ADOLESCENCE;
 }

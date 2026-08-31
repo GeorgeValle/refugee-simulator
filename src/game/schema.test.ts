@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   AGE_BAND,
+  type AgeBand,
   LOSS_CAUSE,
   RELATIONSHIP,
+  type Relationship,
   SLIP_CATEGORY,
   SLIP_KIND,
   SLIP_STATUS,
@@ -160,5 +162,34 @@ describe("game session invariants", () => {
         ),
       }).success,
     ).toBe(false);
+  });
+
+  it("accepts formerly valid adult and old-age relationships already stored in a save", () => {
+    const firstLoss = createStorySession(STORY_STEP.FIRST_LOSS);
+    const lastMember = firstLoss.family[3];
+    if (!lastMember) throw new Error("Expected a fourth family member");
+    const withLegacyRelationship = (ageBand: AgeBand, relationship: Relationship) => {
+      const family = firstLoss.family.map((member) =>
+        member.id === lastMember.id ? { ...member, relationship } : member,
+      );
+      return {
+        ...firstLoss,
+        profile: firstLoss.profile ? { ...firstLoss.profile, ageBand } : null,
+        family,
+        slips: firstLoss.slips.map((slip) =>
+          slip.id === `slip-${lastMember.id}` ? { ...slip, relationship } : slip,
+        ),
+      };
+    };
+
+    expect(
+      gameSessionSchema.safeParse(
+        withLegacyRelationship(AGE_BAND.ADULTHOOD, RELATIONSHIP.GRANDMOTHER),
+      ).success,
+    ).toBe(true);
+    expect(
+      gameSessionSchema.safeParse(withLegacyRelationship(AGE_BAND.OLD_AGE, RELATIONSHIP.FATHER))
+        .success,
+    ).toBe(true);
   });
 });

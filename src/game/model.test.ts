@@ -3,6 +3,7 @@ import {
   AGE_BAND,
   canAddRelationship,
   getEligibleRelationships,
+  getPersistedEligibleRelationships,
   RELATIONSHIP,
   usesSportSlip,
 } from "@/game/model";
@@ -46,6 +47,25 @@ describe("family relationship rules", () => {
     expect(eligible).not.toContain(RELATIONSHIP.AUNT);
     expect(eligible).not.toContain(RELATIONSHIP.GRANDFATHER);
     expect(eligible).not.toContain(RELATIONSHIP.GRANDMOTHER);
+  });
+
+  it("keeps formerly valid adult and elder relationships loadable", () => {
+    expect(getPersistedEligibleRelationships(AGE_BAND.ADULTHOOD)).toEqual(
+      expect.arrayContaining([
+        RELATIONSHIP.UNCLE,
+        RELATIONSHIP.AUNT,
+        RELATIONSHIP.GRANDFATHER,
+        RELATIONSHIP.GRANDMOTHER,
+      ]),
+    );
+    expect(getPersistedEligibleRelationships(AGE_BAND.OLD_AGE)).toEqual(
+      expect.arrayContaining([
+        RELATIONSHIP.UNCLE,
+        RELATIONSHIP.AUNT,
+        RELATIONSHIP.FATHER,
+        RELATIONSHIP.MOTHER,
+      ]),
+    );
   });
 
   it("allows repeated children and siblings, but not singular relationships", () => {
