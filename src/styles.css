@@ -810,6 +810,28 @@ a:focus-visible {
   display: table;
   margin: 18px auto 0 !important;
 }
+.protagonist-arrival-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px auto 0;
+  padding: 9px 14px 9px 9px;
+  border: 1px solid rgba(114, 197, 193, 0.42);
+  border-radius: 12px;
+  background: rgba(8, 20, 35, 0.76);
+  text-align: left;
+}
+.protagonist-arrival-card img {
+  width: 64px;
+  height: 76px;
+  object-fit: contain;
+  object-position: bottom;
+}
+.protagonist-arrival-card p {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 750;
+}
 
 .loss-board {
   width: min(1280px, 100%);

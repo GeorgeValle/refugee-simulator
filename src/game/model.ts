@@ -24,6 +24,8 @@ export const RELATIONSHIP = {
   HUSBAND: "husband",
   BROTHER: "brother",
   SISTER: "sister",
+  NEPHEW: "nephew",
+  NIECE: "niece",
   UNCLE: "uncle",
   AUNT: "aunt",
   FATHER: "father",
@@ -39,6 +41,8 @@ export const REPEATABLE_RELATIONSHIPS: ReadonlySet<Relationship> = new Set([
   RELATIONSHIP.SON,
   RELATIONSHIP.BROTHER,
   RELATIONSHIP.SISTER,
+  RELATIONSHIP.NEPHEW,
+  RELATIONSHIP.NIECE,
 ]);
 
 export const STORY_STEP = {
@@ -72,6 +76,7 @@ export const SLIP_KIND = {
   FAMILY: "family",
   OBJECT: "object",
   PROFESSION: "profession",
+  SPORT: "sport",
   SKILL: "skill",
   CLOTHING: "clothing",
   DREAM: "dream",
@@ -167,26 +172,46 @@ export const DEFAULT_AUDIO_PREFERENCES: AudioPreferences = {
 };
 
 export function getEligibleRelationships(ageBand: AgeBand): Relationship[] {
-  const values = Object.values(RELATIONSHIP);
-  return values.filter((relationship) => {
-    const isPartnerOrChild = new Set<Relationship>([
+  const commonEarlyRelationships = [
+    RELATIONSHIP.BROTHER,
+    RELATIONSHIP.SISTER,
+    RELATIONSHIP.UNCLE,
+    RELATIONSHIP.AUNT,
+    RELATIONSHIP.FATHER,
+    RELATIONSHIP.MOTHER,
+    RELATIONSHIP.GRANDFATHER,
+    RELATIONSHIP.GRANDMOTHER,
+  ];
+  if (ageBand === AGE_BAND.CHILDHOOD || ageBand === AGE_BAND.ADOLESCENCE) {
+    return commonEarlyRelationships;
+  }
+  if (ageBand === AGE_BAND.YOUTH) return Object.values(RELATIONSHIP);
+  if (ageBand === AGE_BAND.ADULTHOOD) {
+    return [
       RELATIONSHIP.DAUGHTER,
       RELATIONSHIP.SON,
       RELATIONSHIP.WIFE,
       RELATIONSHIP.HUSBAND,
-    ]).has(relationship);
-    if (
-      isPartnerOrChild &&
-      new Set<AgeBand>([AGE_BAND.CHILDHOOD, AGE_BAND.ADOLESCENCE]).has(ageBand)
-    ) {
-      return false;
-    }
-    const isGrandparent = new Set<Relationship>([
-      RELATIONSHIP.GRANDFATHER,
-      RELATIONSHIP.GRANDMOTHER,
-    ]).has(relationship);
-    return !(ageBand === AGE_BAND.OLD_AGE && isGrandparent);
-  });
+      RELATIONSHIP.BROTHER,
+      RELATIONSHIP.SISTER,
+      RELATIONSHIP.FATHER,
+      RELATIONSHIP.MOTHER,
+    ];
+  }
+  return [
+    RELATIONSHIP.DAUGHTER,
+    RELATIONSHIP.SON,
+    RELATIONSHIP.WIFE,
+    RELATIONSHIP.HUSBAND,
+    RELATIONSHIP.BROTHER,
+    RELATIONSHIP.SISTER,
+    RELATIONSHIP.NEPHEW,
+    RELATIONSHIP.NIECE,
+  ];
+}
+
+export function usesSportSlip(ageBand: AgeBand): boolean {
+  return ageBand === AGE_BAND.CHILDHOOD || ageBand === AGE_BAND.ADOLESCENCE;
 }
 
 export function canAddRelationship(

@@ -15,6 +15,7 @@ import {
   SLIP_KIND,
   SLIP_STATUS,
   STORY_STEP,
+  usesSportSlip,
 } from "@/game/model";
 import { UNLOCKABLE_ID, UNLOCKABLE_IDS, type UnlockableProgress } from "@/game/unlockables";
 
@@ -116,9 +117,13 @@ export const gameSessionSchema: z.ZodType<GameSession> = gameSessionShape.superR
       const identityShape =
         slip.category === SLIP_CATEGORY.IDENTITY &&
         (
-          [SLIP_KIND.PROFESSION, SLIP_KIND.SKILL, SLIP_KIND.CLOTHING, SLIP_KIND.DREAM] as Array<
-            MemorySlip["kind"]
-          >
+          [
+            SLIP_KIND.PROFESSION,
+            SLIP_KIND.SPORT,
+            SLIP_KIND.SKILL,
+            SLIP_KIND.CLOTHING,
+            SLIP_KIND.DREAM,
+          ] as Array<MemorySlip["kind"]>
         ).includes(slip.kind) &&
         slip.relatedName === null &&
         slip.relationship === null;
@@ -217,10 +222,17 @@ export const gameSessionSchema: z.ZodType<GameSession> = gameSessionShape.superR
       for (const slip of session.slips) {
         kindCounts.set(slip.kind, (kindCounts.get(slip.kind) ?? 0) + 1);
       }
+      const personalActivityKind =
+        session.profile && usesSportSlip(session.profile.ageBand)
+          ? SLIP_KIND.SPORT
+          : SLIP_KIND.PROFESSION;
       const validComposition =
         kindCounts.get(SLIP_KIND.FAMILY) === 4 &&
         kindCounts.get(SLIP_KIND.OBJECT) === 4 &&
-        kindCounts.get(SLIP_KIND.PROFESSION) === 1 &&
+        kindCounts.get(personalActivityKind) === 1 &&
+        kindCounts.get(
+          personalActivityKind === SLIP_KIND.SPORT ? SLIP_KIND.PROFESSION : SLIP_KIND.SPORT,
+        ) === undefined &&
         kindCounts.get(SLIP_KIND.SKILL) === 1 &&
         kindCounts.get(SLIP_KIND.CLOTHING) === 1 &&
         kindCounts.get(SLIP_KIND.DREAM) === 1;
@@ -327,7 +339,7 @@ export const familyInputSchema = z.object({
 
 export const packingInputSchema = z.object({
   objects: z.array(z.string().trim().min(1).max(60)).length(4),
-  profession: z.string().trim().min(1).max(60),
+  personalActivity: z.string().trim().min(1).max(60),
   skill: z.string().trim().min(1).max(60),
   clothing: z.string().trim().min(1).max(60),
   dream: z.string().trim().min(1).max(120),

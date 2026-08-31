@@ -79,7 +79,10 @@ export function FamilyScreen({ ageBand, initialFamily, onSubmit }: FamilyScreenP
                 <legend>{t("family.member", { number: index + 1 })}</legend>
                 <div className="family-card__portrait" aria-hidden="true">
                   {row.relationship ? (
-                    <img src={getPortraitAsset(getRelationshipPortrait(row.relationship))} alt="" />
+                    <img
+                      src={getPortraitAsset(getRelationshipPortrait(row.relationship, ageBand))}
+                      alt=""
+                    />
                   ) : (
                     <span>·</span>
                   )}

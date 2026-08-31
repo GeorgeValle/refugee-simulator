@@ -18,6 +18,7 @@ export const UNLOCKABLE_ID = {
   OLD_AGE_ARRIVAL: "oldAgeArrival",
   DREAM_REMAINS: "dreamRemains",
   PROFESSION_REMAINS: "professionRemains",
+  SPORT_REMAINS: "sportRemains",
 } as const;
 
 export type UnlockableId = (typeof UNLOCKABLE_ID)[keyof typeof UNLOCKABLE_ID];
@@ -40,6 +41,7 @@ export interface ArrivalSummary {
   spouseIsOnlyFamily: boolean;
   dreamRemains: boolean;
   professionRemains: boolean;
+  sportRemains: boolean;
 }
 
 const AGE_UNLOCKABLES: Readonly<Record<AgeBand, UnlockableId>> = {
@@ -79,6 +81,7 @@ export function analyzeArrival(session: GameSession): ArrivalSummary | null {
         onlyFamily?.relationship === RELATIONSHIP.HUSBAND),
     dreamRemains: activeKinds.has(SLIP_KIND.DREAM),
     professionRemains: activeKinds.has(SLIP_KIND.PROFESSION),
+    sportRemains: activeKinds.has(SLIP_KIND.SPORT),
   };
 }
 
@@ -91,6 +94,12 @@ export function evaluateUnlockables(session: GameSession): UnlockableId[] {
   if (arrival.spouseIsOnlyFamily) unlocked.push(UNLOCKABLE_ID.SPOUSE_ONLY);
   if (arrival.dreamRemains) unlocked.push(UNLOCKABLE_ID.DREAM_REMAINS);
   if (arrival.professionRemains) unlocked.push(UNLOCKABLE_ID.PROFESSION_REMAINS);
+  if (
+    (arrival.ageBand === AGE_BAND.CHILDHOOD || arrival.ageBand === AGE_BAND.ADOLESCENCE) &&
+    arrival.sportRemains
+  ) {
+    unlocked.push(UNLOCKABLE_ID.SPORT_REMAINS);
+  }
   return unlocked;
 }
 

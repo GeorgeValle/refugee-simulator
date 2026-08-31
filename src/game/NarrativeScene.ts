@@ -120,7 +120,8 @@ export class NarrativeScene extends Phaser.Scene {
       ]).has(visual.step)
     ) {
       for (const member of visual.family) {
-        const portrait = getRelationshipPortrait(member.relationship);
+        if (!visual.profile) continue;
+        const portrait = getRelationshipPortrait(member.relationship, visual.profile.ageBand);
         const key = `protagonist-${portrait.gender}-${portrait.ageBand}`;
         if (this.textures.exists(key)) {
           this.foregrounds.push(this.add.image(0, 0, key).setOrigin(0.5, 1).setDepth(3));

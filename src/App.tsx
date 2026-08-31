@@ -306,11 +306,12 @@ export default function App() {
           />
         ) : null;
       case STORY_STEP.PACKING:
-        return (
+        return session.profile ? (
           <PackingScreen
+            ageBand={session.profile.ageBand}
             onSubmit={(packing) => dispatchGame({ type: GAME_EVENT.SET_PACKING, packing })}
           />
-        );
+        ) : null;
       case STORY_STEP.FIRST_LOSS:
         return (
           <LossScreen
