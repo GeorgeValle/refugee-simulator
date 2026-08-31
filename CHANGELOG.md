@@ -1,6 +1,14 @@
 # Changelog
 
-## Próxima PR — Resumen final agrupado
+## Próxima PR — Ajustes de edad, familia y papelitos
+
+- Reemplazado el papelito de profesión por deporte para Niñez y Adolescencia, incluido su recorrido
+  desbloqueable exclusivo.
+- Ajustados parentescos disponibles y repetibles por franja de edad, con sobrino/sobrina en Vejez.
+- Actualizados los retratos familiares para expresar edades relativas y añadida la tarjeta de la
+  persona protagonista al cierre del campamento.
+
+## PR #5 — Resumen final agrupado
 
 - Separado el recuento final en pertenencias o aspectos personales y familiares.
 - Añadidos retratos grises para familiares separados y retratos a color para quienes llegaron al

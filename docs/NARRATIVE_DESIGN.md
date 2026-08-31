@@ -10,7 +10,9 @@ empatía y reflexión, no simular una experiencia de sufrimiento como entretenim
 
 1. **Inicio:** aviso de contenido, ciudad nocturna y creación del personaje.
 2. **Amenaza:** departamento, explosiones lejanas y noticia de la llegada de soldados.
-3. **Preparación:** cuatro familiares y doce papelitos escritos por la persona jugadora.
+3. **Preparación:** cuatro familiares y doce papelitos escritos por la persona jugadora. En Niñez
+   y Adolescencia, el papelito personal representa un deporte; desde Juventud representa una
+   profesión.
 4. **Primera huida:** elección consciente de dos pérdidas.
 5. **Llegada a Rihal:** la familia alcanza un pueblo camino a la frontera y descansa brevemente en
    la casa de una familia local.
@@ -27,7 +29,8 @@ vida. Los papelitos no familiares se distribuyen entre **Lo que quedó atrás** 
 llevás con vos**. Los familiares se presentan por separado en **Quiénes quedaron atrás** y **¿Con
 quiénes llegaste?**.
 
-Cada familiar muestra su nombre y parentesco mediante los retratos ficticios ya distribuidos. Las
+Cada familiar muestra su nombre y parentesco mediante los retratos ficticios ya distribuidos,
+respetando la edad relativa al personaje. Las
 personas separadas aparecen en escala de grises, conservan la causa de separación y se describen
 con destino desconocido; quienes llegan aparecen a color. El texto y la estructura semántica
 comunican también el resultado, de modo que el color no sea la única señal. Si nadie llega con el
@@ -43,10 +46,14 @@ la familia llegó reunida. Ambos textos se muestran cuando coinciden las dos con
 
 ## Recorridos desbloqueables
 
-La sección accesible desde el menú presenta nueve cartas: llegar con toda la familia, llegar solo
-con la pareja, llegar en cada una de las cinco franjas de edad, conservar el sueño y conservar la
-profesión. Las cartas bloqueadas permanecen en gris, pero siempre muestran su título y condición;
-las desbloqueadas recuperan el color y anuncian su estado de manera accesible.
+La sección accesible desde el menú presenta diez cartas: llegar con toda la familia, llegar solo
+con la pareja, llegar en cada una de las cinco franjas de edad, conservar el sueño, conservar la
+profesión y conservar el deporte. Esta última solo corresponde a Niñez y Adolescencia. Las cartas
+bloqueadas permanecen en gris, pero siempre muestran su título y condición; las desbloqueadas
+recuperan el color y anuncian su estado de manera accesible.
+
+Junto al ambiente sonoro del campamento se muestra el retrato de la persona elegida y una frase
+neutra que reconoce su llegada. Así el cierre incluye también a quien protagoniza el recorrido.
 
 Estos recorridos no son logros, premios ni una puntuación del sufrimiento. Representan distintas
 perspectivas de una misma historia y buscan fomentar la reflexión. Se desbloquean al llegar al
