@@ -16,6 +16,7 @@ const FEMALE_RELATIONSHIPS: ReadonlySet<Relationship> = new Set([
   RELATIONSHIP.DAUGHTER,
   RELATIONSHIP.WIFE,
   RELATIONSHIP.SISTER,
+  RELATIONSHIP.NIECE,
   RELATIONSHIP.AUNT,
   RELATIONSHIP.MOTHER,
   RELATIONSHIP.GRANDMOTHER,
@@ -43,14 +44,42 @@ const PARENT_RELATIONSHIPS: ReadonlySet<Relationship> = new Set([
   RELATIONSHIP.AUNT,
 ]);
 
-export function getRelationshipPortrait(relationship: Relationship): PortraitDescriptor {
+const PARTNER_RELATIONSHIPS: ReadonlySet<Relationship> = new Set([
+  RELATIONSHIP.WIFE,
+  RELATIONSHIP.HUSBAND,
+]);
+
+const NEPHEW_RELATIONSHIPS: ReadonlySet<Relationship> = new Set([
+  RELATIONSHIP.NEPHEW,
+  RELATIONSHIP.NIECE,
+]);
+
+export function getRelationshipPortrait(
+  relationship: Relationship,
+  profileAgeBand: AgeBand,
+): PortraitDescriptor {
   const gender = FEMALE_RELATIONSHIPS.has(relationship) ? GENDER.WOMAN : GENDER.MAN;
-  if (CHILD_RELATIONSHIPS.has(relationship)) return { gender, ageBand: AGE_BAND.CHILDHOOD };
+  if (CHILD_RELATIONSHIPS.has(relationship)) {
+    return {
+      gender,
+      ageBand: profileAgeBand === AGE_BAND.OLD_AGE ? AGE_BAND.YOUTH : AGE_BAND.ADOLESCENCE,
+    };
+  }
   if (SIBLING_RELATIONSHIPS.has(relationship)) {
-    return { gender, ageBand: AGE_BAND.ADOLESCENCE };
+    return {
+      gender,
+      ageBand: profileAgeBand === AGE_BAND.OLD_AGE ? AGE_BAND.ADULTHOOD : AGE_BAND.YOUTH,
+    };
   }
   if (ELDER_RELATIONSHIPS.has(relationship)) return { gender, ageBand: AGE_BAND.OLD_AGE };
-  if (PARENT_RELATIONSHIPS.has(relationship)) return { gender, ageBand: AGE_BAND.ADULTHOOD };
+  if (PARENT_RELATIONSHIPS.has(relationship)) {
+    return {
+      gender,
+      ageBand: profileAgeBand === AGE_BAND.ADULTHOOD ? AGE_BAND.OLD_AGE : AGE_BAND.ADULTHOOD,
+    };
+  }
+  if (NEPHEW_RELATIONSHIPS.has(relationship)) return { gender, ageBand: AGE_BAND.YOUTH };
+  if (PARTNER_RELATIONSHIPS.has(relationship)) return { gender, ageBand: profileAgeBand };
   return { gender, ageBand: AGE_BAND.YOUTH };
 }
 

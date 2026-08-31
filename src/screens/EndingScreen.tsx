@@ -1,7 +1,14 @@
 import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { PaperSlip } from "@/components/PaperSlip";
-import { type GameSession, type MemorySlip, SLIP_KIND, SLIP_STATUS } from "@/game/model";
+import {
+  AGE_BAND,
+  type AgeBand,
+  type GameSession,
+  type MemorySlip,
+  SLIP_KIND,
+  SLIP_STATUS,
+} from "@/game/model";
 import { getPortraitAsset, getRelationshipPortrait } from "@/game/portraits";
 import { analyzeArrival } from "@/game/unlockables";
 
@@ -25,9 +32,10 @@ function describeLoss(slip: MemorySlip, t: TFunction): string {
 interface FamilyOutcomeCardProps {
   slip: MemorySlip;
   status: FamilyOutcomeStatus;
+  profileAgeBand: AgeBand;
 }
 
-function FamilyOutcomeCard({ slip, status }: FamilyOutcomeCardProps) {
+function FamilyOutcomeCard({ slip, status, profileAgeBand }: FamilyOutcomeCardProps) {
   const { t } = useTranslation();
   if (!slip.relationship) return null;
   const separated = status === FAMILY_OUTCOME_STATUS.SEPARATED;
@@ -36,7 +44,7 @@ function FamilyOutcomeCard({ slip, status }: FamilyOutcomeCardProps) {
     <article className={`family-outcome-card${separated ? " family-outcome-card--separated" : ""}`}>
       <div className="family-outcome-card__portrait" aria-hidden="true">
         <img
-          src={getPortraitAsset(getRelationshipPortrait(slip.relationship))}
+          src={getPortraitAsset(getRelationshipPortrait(slip.relationship, profileAgeBand))}
           alt=""
           loading="lazy"
           decoding="async"
@@ -72,6 +80,7 @@ export function EndingScreen({ session, showCaptions, onMenu }: EndingScreenProp
   const arrivedFamily = remaining.filter((slip) => slip.kind === SLIP_KIND.FAMILY);
   const remainingNonFamily = remaining.filter((slip) => slip.kind !== SLIP_KIND.FAMILY);
   const arrival = analyzeArrival(session);
+  const profile = session.profile;
   const facts = [
     [t("ending.factDisplacedValue"), t("ending.factDisplacedLabel")],
     [t("ending.factChildrenValue"), t("ending.factChildrenLabel")],
@@ -98,6 +107,20 @@ export function EndingScreen({ session, showCaptions, onMenu }: EndingScreenProp
         ) : null}
         {showCaptions ? (
           <p className="sound-caption sound-caption--center">{t("accessibility.softCrying")}</p>
+        ) : null}
+        {profile ? (
+          <article className="protagonist-arrival-card">
+            <img
+              src={getPortraitAsset(profile)}
+              alt={t("ending.protagonistArrivalAlt", {
+                gender: t(`gender.${profile.gender}`),
+                age: t(`age.${profile.ageBand}`),
+              })}
+              loading="lazy"
+              decoding="async"
+            />
+            <p>{t("ending.protagonistArrival")}</p>
+          </article>
         ) : null}
       </section>
       <section className="loss-summary" aria-labelledby="loss-summary-title">
@@ -126,6 +149,7 @@ export function EndingScreen({ session, showCaptions, onMenu }: EndingScreenProp
                 key={slip.id}
                 slip={slip}
                 status={FAMILY_OUTCOME_STATUS.SEPARATED}
+                profileAgeBand={profile?.ageBand ?? AGE_BAND.YOUTH}
               />
             ))}
           </div>
@@ -144,7 +168,12 @@ export function EndingScreen({ session, showCaptions, onMenu }: EndingScreenProp
         {arrivedFamily.length > 0 ? (
           <div className="family-outcome-grid">
             {arrivedFamily.map((slip) => (
-              <FamilyOutcomeCard key={slip.id} slip={slip} status={FAMILY_OUTCOME_STATUS.ARRIVED} />
+              <FamilyOutcomeCard
+                key={slip.id}
+                slip={slip}
+                status={FAMILY_OUTCOME_STATUS.ARRIVED}
+                profileAgeBand={profile?.ageBand ?? AGE_BAND.YOUTH}
+              />
             ))}
           </div>
         ) : (

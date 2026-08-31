@@ -11,6 +11,7 @@ import {
   SLIP_STATUS,
   STORY_STEP,
   type StoryStep,
+  usesSportSlip,
 } from "@/game/model";
 
 export const GAME_EVENT = {
@@ -29,7 +30,7 @@ export const GAME_EVENT = {
 
 interface PackingPayload {
   objects: string[];
-  profession: string;
+  personalActivity: string;
   skill: string;
   clothing: string;
   dream: string;
@@ -143,7 +144,12 @@ export function gameReducer(session: GameSession, event: GameEvent): GameSession
       const familySlips = session.slips.filter((slip) => slip.category === SLIP_CATEGORY.FAMILY);
       const customSlips = [
         ...event.packing.objects.map((value) => toCustomSlip(SLIP_KIND.OBJECT, value)),
-        toCustomSlip(SLIP_KIND.PROFESSION, event.packing.profession),
+        toCustomSlip(
+          session.profile && usesSportSlip(session.profile.ageBand)
+            ? SLIP_KIND.SPORT
+            : SLIP_KIND.PROFESSION,
+          event.packing.personalActivity,
+        ),
         toCustomSlip(SLIP_KIND.SKILL, event.packing.skill),
         toCustomSlip(SLIP_KIND.CLOTHING, event.packing.clothing),
         toCustomSlip(SLIP_KIND.DREAM, event.packing.dream),

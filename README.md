@@ -12,11 +12,12 @@ ni telemetría.
 
 - Recorrido completo de novela visual con un desenlace reflexivo y pérdidas variables.
 - Personaje configurable por género y franja de edad.
-- Reglas familiares dependientes de la edad y cuatro familiares nombrados.
-- Doce papelitos que representan familia, pertenencias, profesión, habilidad, ropa y sueños.
+- Reglas familiares y retratos dependientes de la edad, con cuatro familiares nombrados.
+- Doce papelitos que representan familia, pertenencias, deporte o profesión, habilidad, ropa y
+  sueños.
 - Tres etapas de pérdida: manual, contrarreloj y aleatoria, sin repetir sorteos al recargar.
 - Tres ranuras locales, con datos versionados y validados antes de leer o guardar.
-- Nueve recorridos desbloqueables globales que permanecen aunque se borren las partidas.
+- Diez recorridos desbloqueables globales que permanecen aunque se borren las partidas.
 - Reflexiones finales personalizadas según la edad y la familia que llegó al campamento.
 - Interfaz `es-AR` con voseo y recursos i18next separados del código.
 - Fondos y personajes originales de estilo anime semirrealista.

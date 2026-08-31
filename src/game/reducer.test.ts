@@ -7,6 +7,7 @@ import {
   GENDER,
   LOSS_CAUSE,
   RELATIONSHIP,
+  SLIP_KIND,
   SLIP_STATUS,
   STORY_STEP,
 } from "@/game/model";
@@ -31,7 +32,7 @@ function createPackedSession(): GameSession {
     type: GAME_EVENT.SET_PACKING,
     packing: {
       objects: ["foto", "llaves", "botella", "cuaderno"],
-      profession: "docente",
+      personalActivity: "docente",
       skill: "reparar bicicletas",
       clothing: "abrigo azul",
       dream: "abrir una escuela",
@@ -78,6 +79,39 @@ describe("game reducer", () => {
     expect(session.step).toBe(STORY_STEP.FIRST_LOSS);
     expect(session.slips).toHaveLength(12);
     expect(session.slips.filter((slip) => slip.relationship)).toHaveLength(4);
+  });
+
+  it("creates a Sport slip for childhood and adolescence", () => {
+    let session = createSession(1, 1_000);
+    session = gameReducer(session, {
+      type: GAME_EVENT.SET_PROFILE,
+      profile: { gender: GENDER.WOMAN, ageBand: AGE_BAND.CHILDHOOD },
+      now: 1_100,
+    });
+    session = gameReducer(session, {
+      type: GAME_EVENT.SET_FAMILY,
+      family: [
+        { id: "family-1", name: "Amina", relationship: RELATIONSHIP.SISTER },
+        { id: "family-2", name: "Hadi", relationship: RELATIONSHIP.BROTHER },
+        { id: "family-3", name: "Nadia", relationship: RELATIONSHIP.MOTHER },
+        { id: "family-4", name: "Karim", relationship: RELATIONSHIP.FATHER },
+      ],
+      now: 1_200,
+    });
+    session = gameReducer(session, {
+      type: GAME_EVENT.SET_PACKING,
+      packing: {
+        objects: ["foto", "llaves", "botella", "cuaderno"],
+        personalActivity: "fútbol",
+        skill: "dibujar",
+        clothing: "campera azul",
+        dream: "volver a jugar con mis amistades",
+      },
+      now: 1_300,
+    });
+
+    expect(session.slips.some((slip) => slip.kind === SLIP_KIND.SPORT)).toBe(true);
+    expect(session.slips.some((slip) => slip.kind === SLIP_KIND.PROFESSION)).toBe(false);
   });
 
   it("limits manual pending losses to two and records each loss once", () => {

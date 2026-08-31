@@ -23,6 +23,7 @@ interface ArrivalOptions {
   activeFamily: Relationship[];
   dreamRemains?: boolean;
   professionRemains?: boolean;
+  sportRemains?: boolean;
   updatedAt?: number;
 }
 
@@ -39,15 +40,20 @@ function createArrival(options: ArrivalOptions): GameSession {
     profile: session.profile ? { ...session.profile, ageBand: options.ageBand } : null,
     updatedAt: options.updatedAt ?? session.updatedAt,
     slips: session.slips.map((slip) => {
+      const isSport =
+        slip.kind === SLIP_KIND.PROFESSION &&
+        (options.ageBand === AGE_BAND.CHILDHOOD || options.ageBand === AGE_BAND.ADOLESCENCE);
       const active =
         (slip.kind === SLIP_KIND.FAMILY &&
           slip.relationship !== null &&
           options.activeFamily.includes(slip.relationship)) ||
         (slip.kind === SLIP_KIND.DREAM && options.dreamRemains === true) ||
         (slip.kind === SLIP_KIND.PROFESSION && options.professionRemains === true) ||
+        (isSport && options.sportRemains === true) ||
         ALWAYS_ACTIVE_KINDS.has(slip.kind);
       return {
         ...slip,
+        kind: isSport ? SLIP_KIND.SPORT : slip.kind,
         status: active ? SLIP_STATUS.ACTIVE : SLIP_STATUS.LOST,
       };
     }),
@@ -94,6 +100,22 @@ describe("unlockable journey evaluation", () => {
     });
     expect(analyzeArrival(spouseAndSibling)?.spouseIsOnlyFamily).toBe(false);
     expect(evaluateUnlockables(spouseAndSibling)).not.toContain(UNLOCKABLE_ID.SPOUSE_ONLY);
+  });
+
+  it("unlocks the sport journey only for childhood and adolescence", () => {
+    const childhood = createArrival({
+      ageBand: AGE_BAND.CHILDHOOD,
+      activeFamily: [],
+      sportRemains: true,
+    });
+    expect(evaluateUnlockables(childhood)).toContain(UNLOCKABLE_ID.SPORT_REMAINS);
+
+    const youth = createArrival({
+      ageBand: AGE_BAND.YOUTH,
+      activeFamily: [],
+      sportRemains: true,
+    });
+    expect(evaluateUnlockables(youth)).not.toContain(UNLOCKABLE_ID.SPORT_REMAINS);
   });
 
   it.each([

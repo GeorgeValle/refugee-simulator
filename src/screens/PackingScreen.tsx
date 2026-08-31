@@ -2,15 +2,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import type { z } from "zod";
+import { type AgeBand, usesSportSlip } from "@/game/model";
 import { packingInputSchema } from "@/game/schema";
 
 type PackingFormValues = z.infer<typeof packingInputSchema>;
 
 interface PackingScreenProps {
+  ageBand: AgeBand;
   onSubmit: (packing: PackingFormValues) => void;
 }
 
-export function PackingScreen({ onSubmit }: PackingScreenProps) {
+export function PackingScreen({ ageBand, onSubmit }: PackingScreenProps) {
   const { t } = useTranslation();
   const {
     register,
@@ -20,12 +22,13 @@ export function PackingScreen({ onSubmit }: PackingScreenProps) {
     resolver: zodResolver(packingInputSchema),
     defaultValues: {
       objects: ["", "", "", ""],
-      profession: "",
+      personalActivity: "",
       skill: "",
       clothing: "",
       dream: "",
     },
   });
+  const personalActivityKey = usesSportSlip(ageBand) ? "sport" : "profession";
 
   return (
     <main className="panel-screen">
@@ -55,13 +58,21 @@ export function PackingScreen({ onSubmit }: PackingScreenProps) {
           <fieldset className="packing-section">
             <legend>{t("slips.identityCategory")}</legend>
             <div className="lined-paper-grid">
-              {(["profession", "skill", "clothing", "dream"] as const).map((key) => (
+              {(["personalActivity", "skill", "clothing", "dream"] as const).map((key) => (
                 <label className="lined-field" key={key}>
-                  <span>{t(`slips.${key}`)}</span>
+                  <span>
+                    {t(
+                      key === "personalActivity" ? `slips.${personalActivityKey}` : `slips.${key}`,
+                    )}
+                  </span>
                   <input
                     {...register(key)}
                     maxLength={key === "dream" ? 120 : 60}
-                    placeholder={t(`slips.${key}Placeholder`)}
+                    placeholder={t(
+                      key === "personalActivity"
+                        ? `slips.${personalActivityKey}Placeholder`
+                        : `slips.${key}Placeholder`,
+                    )}
                   />
                   {errors[key] ? <small>{t("common.required")}</small> : null}
                 </label>

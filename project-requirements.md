@@ -47,8 +47,10 @@ recorridos.
 2. Género y franja de edad: Niñez, Adolescencia, Juventud, Adultez o Vejez.
 3. Departamento nocturno, amenaza cercana y televisión que explica que una caravana ficticia tomó
    la ciudad vecina y obliga a la familia a huir hacia la frontera.
-4. Selección y nombre de cuatro familiares, con restricciones por edad y unicidad.
-5. Doce papelitos: familia, objetos, profesión, habilidad, ropa favorita y sueño.
+4. Selección y nombre de cuatro familiares, con restricciones, repetición y retratos acordes a la
+   edad. Vejez usa sobrinos/as en lugar de padres/madres; Adultez no ofrece abuelos/as.
+5. Doce papelitos: familia, objetos, deporte en Niñez/Adolescencia o profesión desde Juventud,
+   habilidad, ropa favorita y sueño.
 6. Dos pérdidas manuales antes de salir de Nahr.
 7. Llegada y descanso en Rihal, un pueblo ficticio camino a la frontera, antes de una advertencia
    que inicia una nueva huida.
@@ -57,8 +59,9 @@ recorridos.
    separados con destino desconocido, elementos no familiares conservados y familiares que
    llegaron. Las personas se representan con nombre, parentesco y retratos diferenciados, seguidos
    por reflexiones personalizadas por edad y familia.
-10. Evaluación de nueve recorridos desbloqueables relacionados con la familia, la edad y los
-   aspectos de identidad o futuro que permanecieron.
+10. Evaluación de diez recorridos desbloqueables relacionados con la familia, la edad y los
+   aspectos de identidad o futuro que permanecieron; Deporte solo puede obtenerse en Niñez o
+   Adolescencia.
 
 Una separación familiar siempre se describe como destino desconocido, nunca como fallecimiento.
 Los sorteos son deterministas en pruebas y no se repiten al recargar una decisión ya confirmada.

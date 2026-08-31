@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { AGE_BAND, LOSS_CAUSE, SLIP_CATEGORY, SLIP_STATUS, STORY_STEP } from "@/game/model";
+import {
+  AGE_BAND,
+  type AgeBand,
+  LOSS_CAUSE,
+  RELATIONSHIP,
+  type Relationship,
+  SLIP_CATEGORY,
+  SLIP_KIND,
+  SLIP_STATUS,
+  STORY_STEP,
+} from "@/game/model";
 import { GAME_EVENT, gameReducer } from "@/game/reducer";
 import { gameSessionSchema } from "@/game/schema";
 import { createStorySession, createStorySessions } from "@/test/storyFixtures";
@@ -109,5 +119,77 @@ describe("game session invariants", () => {
         profile: { ...firstLoss.profile, ageBand: AGE_BAND.CHILDHOOD },
       }).success,
     ).toBe(false);
+  });
+
+  it("requires Sport rather than Profession for packed childhood sessions", () => {
+    const firstLoss = createStorySession(STORY_STEP.FIRST_LOSS);
+    const relationships = [
+      RELATIONSHIP.SISTER,
+      RELATIONSHIP.BROTHER,
+      RELATIONSHIP.MOTHER,
+      RELATIONSHIP.FATHER,
+    ];
+    const family = firstLoss.family.map((member, index) => ({
+      ...member,
+      relationship: relationships[index] ?? member.relationship,
+    }));
+    const childhood = {
+      ...firstLoss,
+      profile: firstLoss.profile ? { ...firstLoss.profile, ageBand: AGE_BAND.CHILDHOOD } : null,
+      family,
+      slips: firstLoss.slips.map((slip, index) => {
+        if (slip.kind === SLIP_KIND.FAMILY) {
+          const member = family[index];
+          return member
+            ? {
+                ...slip,
+                relationship: member.relationship,
+                relatedName: member.name,
+                value: member.name,
+              }
+            : slip;
+        }
+        return slip.kind === SLIP_KIND.PROFESSION ? { ...slip, kind: SLIP_KIND.SPORT } : slip;
+      }),
+    };
+
+    expect(gameSessionSchema.safeParse(childhood).success).toBe(true);
+    expect(
+      gameSessionSchema.safeParse({
+        ...childhood,
+        slips: childhood.slips.map((slip) =>
+          slip.kind === SLIP_KIND.SPORT ? { ...slip, kind: SLIP_KIND.PROFESSION } : slip,
+        ),
+      }).success,
+    ).toBe(false);
+  });
+
+  it("accepts formerly valid adult and old-age relationships already stored in a save", () => {
+    const firstLoss = createStorySession(STORY_STEP.FIRST_LOSS);
+    const lastMember = firstLoss.family[3];
+    if (!lastMember) throw new Error("Expected a fourth family member");
+    const withLegacyRelationship = (ageBand: AgeBand, relationship: Relationship) => {
+      const family = firstLoss.family.map((member) =>
+        member.id === lastMember.id ? { ...member, relationship } : member,
+      );
+      return {
+        ...firstLoss,
+        profile: firstLoss.profile ? { ...firstLoss.profile, ageBand } : null,
+        family,
+        slips: firstLoss.slips.map((slip) =>
+          slip.id === `slip-${lastMember.id}` ? { ...slip, relationship } : slip,
+        ),
+      };
+    };
+
+    expect(
+      gameSessionSchema.safeParse(
+        withLegacyRelationship(AGE_BAND.ADULTHOOD, RELATIONSHIP.GRANDMOTHER),
+      ).success,
+    ).toBe(true);
+    expect(
+      gameSessionSchema.safeParse(withLegacyRelationship(AGE_BAND.OLD_AGE, RELATIONSHIP.FATHER))
+        .success,
+    ).toBe(true);
   });
 });

@@ -22,7 +22,7 @@ test("la colección de desbloqueables es navegable y accesible", async ({ page }
   await page.getByRole("button", { name: "Entiendo y quiero continuar" }).click();
   await page.getByRole("button", { name: "Ver desbloqueables" }).click();
   await expect(page.getByRole("heading", { name: "Desbloqueables" })).toBeFocused();
-  await expect(page.getByRole("article")).toHaveCount(9);
+  await expect(page.getByRole("article")).toHaveCount(10);
   await expect(page.getByText("Bloqueado")).toHaveCount(9);
 
   const results = await new AxeBuilder({ page }).analyze();

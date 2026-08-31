@@ -37,7 +37,8 @@ Las láminas se segmentaron en diez PNG con alfa:
 - `protagonist-woman-{childhood,adolescence,youth,adulthood,oldAge}.png`
 
 Los mismos retratos sirven como representaciones visuales dinámicas de los cuatro familiares, de
-acuerdo con parentesco y edad aproximada.
+acuerdo con el parentesco y la edad seleccionada para el personaje. Esto permite mostrar, por
+ejemplo, hijos adolescentes o hermanos de juventud/adultez sin añadir arte distribuible nuevo.
 
 ### Habitante del pueblo
 
