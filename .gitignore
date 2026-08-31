@@ -6,6 +6,7 @@ node_modules/
 dist/
 .vite/
 .cache/
+.wrangler/
 *.tsbuildinfo
 vite.config.*.timestamp-*
 
