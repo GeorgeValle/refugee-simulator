@@ -20,13 +20,13 @@ describe("unlockables screen", () => {
       />,
     );
 
-    expect(screen.getAllByRole("article")).toHaveLength(9);
+    expect(screen.getAllByRole("article")).toHaveLength(10);
     expect(screen.getByRole("heading", { name: "Llegaron juntos" })).toBeVisible();
     expect(
       screen.getByText("Llegá al campamento sin dejar atrás a ningún familiar."),
     ).toBeVisible();
     expect(screen.getAllByText("Desbloqueado")).toHaveLength(1);
-    expect(screen.getAllByText("Bloqueado")).toHaveLength(8);
+    expect(screen.getAllByText("Bloqueado")).toHaveLength(9);
 
     await userEvent.click(screen.getByRole("button", { name: "Volver a partidas" }));
     expect(onBack).toHaveBeenCalledOnce();

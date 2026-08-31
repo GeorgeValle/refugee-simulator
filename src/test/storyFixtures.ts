@@ -47,7 +47,7 @@ export function createStorySessions(slotId: SaveSlotId = 1): GameSession[] {
     type: GAME_EVENT.SET_PACKING,
     packing: {
       objects: ["foto", "llaves", "botella", "cuaderno"],
-      profession: "docente",
+      personalActivity: "docente",
       skill: "reparar bicicletas",
       clothing: "abrigo azul",
       dream: "abrir una escuela",

@@ -35,6 +35,22 @@ describe("personalized ending", () => {
 
     expect(screen.getByText(/Siembra sin cosecha/i)).toBeVisible();
   });
+
+  it("shows the selected protagonist card below the camp sound caption", () => {
+    render(
+      <EndingScreen
+        session={createStorySession(STORY_STEP.ENDING)}
+        showCaptions
+        onMenu={() => undefined}
+      />,
+    );
+
+    expect(screen.getAllByText("Llegaste al campamento")).toHaveLength(2);
+    expect(screen.getByAltText(/Retrato simbólico de tu personaje/i)).toHaveAttribute(
+      "src",
+      expect.stringContaining("protagonist-man-youth.png"),
+    );
+  });
 });
 
 describe("grouped ending summary", () => {
