@@ -29,6 +29,8 @@ describe("family relationship rules", () => {
         RELATIONSHIP.HUSBAND,
       ]),
     );
+    expect(eligible).not.toContain(RELATIONSHIP.NEPHEW);
+    expect(eligible).not.toContain(RELATIONSHIP.NIECE);
   });
 
   it("uses nephews and nieces instead of parents or grandparents in old age", () => {

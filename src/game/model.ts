@@ -185,7 +185,22 @@ export function getEligibleRelationships(ageBand: AgeBand): Relationship[] {
   if (ageBand === AGE_BAND.CHILDHOOD || ageBand === AGE_BAND.ADOLESCENCE) {
     return commonEarlyRelationships;
   }
-  if (ageBand === AGE_BAND.YOUTH) return Object.values(RELATIONSHIP);
+  if (ageBand === AGE_BAND.YOUTH) {
+    return [
+      RELATIONSHIP.DAUGHTER,
+      RELATIONSHIP.SON,
+      RELATIONSHIP.WIFE,
+      RELATIONSHIP.HUSBAND,
+      RELATIONSHIP.BROTHER,
+      RELATIONSHIP.SISTER,
+      RELATIONSHIP.UNCLE,
+      RELATIONSHIP.AUNT,
+      RELATIONSHIP.FATHER,
+      RELATIONSHIP.MOTHER,
+      RELATIONSHIP.GRANDFATHER,
+      RELATIONSHIP.GRANDMOTHER,
+    ];
+  }
   if (ageBand === AGE_BAND.ADULTHOOD) {
     return [
       RELATIONSHIP.DAUGHTER,
